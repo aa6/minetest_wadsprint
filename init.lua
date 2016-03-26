@@ -1,5 +1,5 @@
 -- WAD SPRINTING minetest (https://minetest.net) mod (https://dev.minetest.net/Intro)
--- @link https://github.com/yetanotherusernamebecausegithubisbugged/minetest_wadsprint
+-- @link https://github.com/aa6/minetest_wadsprint
 minetest_wadsprint = 
 {
     players = {},
