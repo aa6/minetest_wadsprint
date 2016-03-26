@@ -11,10 +11,13 @@ How to use:
 3. Release A and D (keep W pressed) and continue sprinting until the stamina runs out.
 
 How to install:
+
 http://wiki.minetest.com/wiki/Installing_mods
 
 How to configure:
+
 Edit `config.lua` at the mod directory.
 
 Credits:
+
 Thanks to [GunshipPenguin](https://github.com/GunshipPenguin) and his [sprint mod](https://github.com/GunshipPenguin/sprint) for giving a good example of how sprint mod for minetest can be done.
