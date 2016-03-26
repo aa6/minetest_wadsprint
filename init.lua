@@ -9,13 +9,13 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua"
 
 function minetest_wadsprint.update_player_properties(player)
     if player.is_sprinting then
-        player.stamina = player.stamina - 1
+        player.stamina = player.stamina - (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT)
         if player.stamina < 0 then
             player.stamina = 0
             minetest_wadsprint.disable_sprinting(player)
         end
     elseif player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
-        player.stamina = player.stamina + 1
+        player.stamina = player.stamina + (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT)
     end
     minetest_wadsprint.hudbar_update_stamina(player)
 end
