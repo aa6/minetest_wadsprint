@@ -1,4 +1,4 @@
-# Wadsprint [0.1.0] [minetest_wadsprint] 
+# Wadsprint [0.1.1] [minetest_wadsprint] 
 
 Minetest mod for sprinting with W,A and D buttons.
 
