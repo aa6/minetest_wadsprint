@@ -16,6 +16,9 @@ function minetest_wadsprint.update_player_properties(player)
         end
     elseif player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
         player.stamina = player.stamina + (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT)
+        if player.stamina > minetest_wadsprint.STAMINA_MAX_VALUE then
+            player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
+        end
     end
     minetest_wadsprint.hudbar_update_stamina(player)
 end
