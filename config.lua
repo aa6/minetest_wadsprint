@@ -3,7 +3,7 @@ minetest_wadsprint.STAMINA_MAX_VALUE                                     = 100
 minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS                    = 1
 minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS                  = 0.2
 minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT                     = 3.8
-minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT               = 10.1
+minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT               = 1.1
 minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.01  -- 1 means 100% decrease
 minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.001 -- 1 means 100% increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).
