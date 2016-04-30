@@ -1,6 +1,4 @@
-# Wadsprint [minetest_wadsprint]
-
-Version: ![Version](/util/minetest_wadsprint_version.png")
+# Wadsprint \[![Version](/util/minetest_wadsprint_version.png)\] [minetest_wadsprint] 
 
 Minetest mod for sprinting with W, A and D buttons.
 
