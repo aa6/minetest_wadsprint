@@ -2,6 +2,7 @@
 -- @link https://github.com/aa6/minetest_wadsprint
 minetest_wadsprint = 
 {
+    version = "0.2.0"
     players = {},
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
@@ -25,20 +26,24 @@ end
 
 function minetest_wadsprint.set_sprinting(player,is_sprinting)
     if player.is_sprinting ~= is_sprinting then
-        player.is_sprinting = is_sprinting
-        if is_sprinting then
-            player.obj:set_physics_override(
-            {
-                jump = minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
-                speed = minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
-            })
-        else
-            player.obj:set_physics_override(
-            {
-                jump = 1.0,
-                speed = 1.0,
-            })
+        if player.is_sprinting ~= nil then
+            local physics = player.obj:get_physics_override()
+            print(minetest_wadsprint.version)
+            if is_sprinting then
+                player.obj:set_physics_override(
+                {
+                    jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
+                    speed = physics.speed - 1 + minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
+                })
+            else
+                player.obj:set_physics_override(
+                {
+                    jump = physics.jump + 1 - minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
+                    speed = physics.speed + 1 - minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
+                })
+            end
         end
+        player.is_sprinting = is_sprinting
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         minetest_wadsprint.hudbar_update_stamina(player)
     end
