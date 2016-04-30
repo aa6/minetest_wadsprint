@@ -1,0 +1,11 @@
+return {
+-- Table: {1}
+{
+   {2},
+},
+-- Table: {2}
+{
+   ["name"]="singleplayer",
+   ["stamina"]=0,
+},
+}

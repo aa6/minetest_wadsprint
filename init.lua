@@ -89,7 +89,7 @@ function minetest_wadsprint.scan_player_controls(player)
     end
     if control["left"] and control["right"] then
         minetest_wadsprint.set_ready_to_sprint(player,true)
-        if control["up"] then
+        if control["up"] and player.stamina > 0 then
             minetest_wadsprint.set_sprinting(player,true)
         end
     else
