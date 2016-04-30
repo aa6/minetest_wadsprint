@@ -1,4 +1,4 @@
-# Wadsprint \[![Version](/util/minetest_wadsprint_version.png)\] [minetest_wadsprint] 
+# Wadsprint [![Version](/util/minetest_wadsprint_version.png)] [minetest_wadsprint] 
 
 Minetest mod for sprinting with W, A and D buttons.
 
@@ -20,4 +20,4 @@ Edit `config.lua` at the mod directory.
 
 **Credits:**
 
-Thanks to [GunshipPenguin](https://github.com/GunshipPenguin) and his [sprint mod](https://github.com/GunshipPenguin/sprint) for giving a good example of how sprint mod for minetest can be done.
+Thanks to [GunshipPenguin](https://github.com/GunshipPenguin) and his [sprint mod](https://github.com/GunshipPenguin/sprint) for showing a good example of how sprint mod for minetest can be done.
