@@ -26,7 +26,6 @@ end
 
 function minetest_wadsprint.set_sprinting(player,is_sprinting)
     if player.is_sprinting ~= is_sprinting then
-        print(minetest_wadsprint.version)
         if player.is_sprinting ~= nil then
             local physics = player.obj:get_physics_override()
             if is_sprinting then
