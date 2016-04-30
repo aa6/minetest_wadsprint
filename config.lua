@@ -1,5 +1,7 @@
 -- Common config values
 minetest_wadsprint.STAMINA_MAX_VALUE                                     = 100
+minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                            = true
+minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS                      = 100
 minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS                    = 1
 minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS                  = 0.2
 minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT                     = 3.8
