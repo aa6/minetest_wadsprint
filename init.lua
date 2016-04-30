@@ -101,21 +101,21 @@ if minetest_wadsprint.register_hudbar ~= nil then
     minetest_wadsprint.register_hudbar()
 end
 -- Main cycle.
+local timer_stats_update = 0
 local timer_controls_check = 0
-local timer_properties_update = 0
 minetest.register_globalstep(function(dtime)
+    timer_stats_update = timer_stats_update + dtime
     timer_controls_check = timer_controls_check + dtime
-    timer_properties_update = timer_properties_update + dtime
+    if timer_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
+        timer_stats_update = 0
+        for player_name,player in pairs(minetest_wadsprint.players) do
+            minetest_wadsprint.stamina_update_cycle(player)
+        end
+    end
     if timer_controls_check > minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS then
         timer_controls_check = 0
         for player_name,player in pairs(minetest_wadsprint.players) do
             minetest_wadsprint.scan_player_controls(player)
-        end
-    end
-    if timer_properties_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
-        timer_properties_update = 0
-        for player_name,player in pairs(minetest_wadsprint.players) do
-            minetest_wadsprint.stamina_update_cycle(player)
         end
     end
 end)
