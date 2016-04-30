@@ -2,8 +2,8 @@
 -- @link https://github.com/aa6/minetest_wadsprint
 minetest_wadsprint = 
 {
-    version = "0.2.0"
     players = {},
+    version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
@@ -26,6 +26,7 @@ end
 
 function minetest_wadsprint.set_sprinting(player,is_sprinting)
     if player.is_sprinting ~= is_sprinting then
+        print(minetest_wadsprint.version)
         if player.is_sprinting ~= nil then
             local physics = player.obj:get_physics_override()
             if is_sprinting then
