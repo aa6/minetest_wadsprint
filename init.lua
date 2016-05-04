@@ -79,7 +79,9 @@ function minetest_wadsprint.set_sprinting(player,is_sprinting)
             if is_sprinting then
                 minetest_wadsprint.set_sprinting_physics(player,true)
             else
-                minetest_wadsprint.set_sprinting_physics(player,false)
+                if not player.is_ready_to_sprint then
+                    minetest_wadsprint.set_sprinting_physics(player,false)
+                end
             end
         end
         player.is_sprinting = is_sprinting
@@ -93,7 +95,7 @@ function minetest_wadsprint.set_ready_to_sprint(player,is_ready_to_sprint)
         if is_ready_to_sprint then
             minetest_wadsprint.set_sprinting_physics(player,true)
         else
-            if player.is_sprinting == false then
+            if not player.is_sprinting then
                 minetest_wadsprint.set_sprinting_physics(player,false)  
             end
         end
