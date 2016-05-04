@@ -51,22 +51,35 @@ function minetest_wadsprint.stamina_update_cycle(player)
     minetest_wadsprint.hudbar_update_stamina(player)
 end
 
-function minetest_wadsprint.set_sprinting(player,is_sprinting)
-    if player.is_sprinting ~= is_sprinting then
-        if player.is_sprinting ~= nil then
-            local physics = player.obj:get_physics_override()
-            if is_sprinting then
-                player.obj:set_physics_override(
-                {
-                    jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
-                    speed = physics.speed - 1 + minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
-                })
-            else
+function minetest_wadsprint.set_sprinting_physics(player,is_on)
+    if player.is_sprinting_physics_on ~= is_on then
+        local physics = player.obj:get_physics_override()
+        if is_on then
+            player.obj:set_physics_override(
+            {
+                jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
+                speed = physics.speed - 1 + minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
+            })
+        else
+            if player.is_sprinting_physics_on ~= nil then
                 player.obj:set_physics_override(
                 {
                     jump = physics.jump + 1 - minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
                     speed = physics.speed + 1 - minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
                 })
+            end
+        end
+        player.is_sprinting_physics_on = is_on
+    end
+end
+
+function minetest_wadsprint.set_sprinting(player,is_sprinting)
+    if player.is_sprinting ~= is_sprinting then
+        if player.is_sprinting ~= nil then
+            if is_sprinting then
+                minetest_wadsprint.set_sprinting_physics(player,true)
+            else
+                minetest_wadsprint.set_sprinting_physics(player,false)
             end
         end
         player.is_sprinting = is_sprinting
@@ -77,6 +90,13 @@ end
 
 function minetest_wadsprint.set_ready_to_sprint(player,is_ready_to_sprint)
     if player.is_ready_to_sprint ~= is_ready_to_sprint then
+        if is_ready_to_sprint then
+            minetest_wadsprint.set_sprinting_physics(player,true)
+        else
+            if player.is_sprinting == false then
+                minetest_wadsprint.set_sprinting_physics(player,false)  
+            end
+        end
         player.is_ready_to_sprint = is_ready_to_sprint
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
     end
@@ -87,9 +107,9 @@ function minetest_wadsprint.scan_player_controls(player)
     if not control["up"] then
         minetest_wadsprint.set_sprinting(player,false)
     end
-    if control["left"] and control["right"] then
+    if control["left"] and control["right"] and not control["down"] then
         minetest_wadsprint.set_ready_to_sprint(player,true)
-        if control["up"] and player.stamina > 0 then
+        if control["up"] and player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
             minetest_wadsprint.set_sprinting(player,true)
         end
     else
