@@ -39,8 +39,9 @@ function minetest_wadsprint.stamina_update_cycle(player)
     if player.is_sprinting then
         player.stamina = player.stamina - (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT)
         if player.stamina < 0 then
-            player.stamina = 0
             minetest_wadsprint.set_sprinting(player,false)
+            minetest_wadsprint.set_ready_to_sprint(player,false)
+            player.stamina = 0
         end
     elseif player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
         player.stamina = player.stamina + (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT)
@@ -110,9 +111,11 @@ function minetest_wadsprint.scan_player_controls(player)
         minetest_wadsprint.set_sprinting(player,false)
     end
     if control["left"] and control["right"] and not control["down"] then
-        minetest_wadsprint.set_ready_to_sprint(player,true)
-        if control["up"] and player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-            minetest_wadsprint.set_sprinting(player,true)
+        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+          minetest_wadsprint.set_ready_to_sprint(player,true)
+          if control["up"] then
+              minetest_wadsprint.set_sprinting(player,true)
+          end
         end
     else
         minetest_wadsprint.set_ready_to_sprint(player,false)
