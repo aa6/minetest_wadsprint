@@ -22,12 +22,12 @@ Edit `config.lua` at the mod directory.
 
 All dependencies are optional.
 
-[hudbars?](http://repo.or.cz/minetest_hudbars.git)
-[hud?](https://github.com/BlockMen/hud_hunger)
+- [hudbars?](http://repo.or.cz/minetest_hudbars.git)
+- [hud?](https://github.com/BlockMen/hud_hunger)
 
 **Dependents:**
 
-[minetest_wadsprint](https://github.com/aa6/minetest_wadsprint)
+- [minetest_wadsprint](https://github.com/aa6/minetest_wadsprint)
 
 **Credits:**
 
