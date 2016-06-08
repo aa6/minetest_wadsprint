@@ -12,42 +12,78 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_savetable.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_exists.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.lua")
+minetest_wadsprint.api.events = EventEmitter:new()
 
--- API function to safely get player's stamina value.
-function minetest_wadsprint.api.get_stamina_rate(player_name)
-    if minetest_wadsprint.players[player_name] ~= nil then
-        return minetest_wadsprint.players[player_name].stamina / minetest_wadsprint.STAMINA_MAX_VALUE
-    end
+function minetest_wadsprint.api.stats(player_name)
+    local player = minetest_wadsprint.players[player_name]
+    if player ~= nil then
+        return 
+            {
+                name = player_name,
+                stamina = player.stamina,
+                is_sprinting = player.is_sprinting,
+                is_ready_to_sprint = player.is_ready_to_sprint,
+                is_sprinting_physics_on = player.is_sprinting_physics_on,
+            }
+    end  
 end
 
--- API function to safely change player's stamina.
-function minetest_wadsprint.api.change_stamina_by_coefficient(player_name,stamina_change_coefficient)
-    if minetest_wadsprint.players[player_name] ~= nil then
-        local player = minetest_wadsprint.players[player_name]
-        player.stamina = player.stamina + (stamina_change_coefficient * minetest_wadsprint.STAMINA_MAX_VALUE)
-        if player.stamina < 0 then
-            player.stamina = 0
-        elseif player.stamina > minetest_wadsprint.STAMINA_MAX_VALUE then
-            player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
+function minetest_wadsprint.api.stamina(player_name,stamina_rate)
+    local player = minetest_wadsprint.players[player_name]
+    if player ~= nil then
+        if stamina_value ~= nil then
+            minetest_wadsprint.set_stamina(player, minetest_wadsprint.STAMINA_MAX_VALUE * stamina_value)
+        else
+            return player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE
         end
-        minetest_wadsprint.hudbar_update_stamina(player)
-    end
-    return minetest_wadsprint.api
+    end  
+end
+
+function minetest_wadsprint.api.addstamina(player_name,stamina_rate_change)
+    local player = minetest_wadsprint.players[player_name]
+    if player ~= nil then
+        minetest_wadsprint.set_stamina(player, player.stamina + minetest_wadsprint.STAMINA_MAX_VALUE * stamina_value)
+    end  
 end
 
 function minetest_wadsprint.stamina_update_cycle(player)
     if player.is_sprinting then
-        player.stamina = player.stamina - (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT)
-        if player.stamina < 0 then
-            minetest_wadsprint.set_sprinting(player,false)
-            minetest_wadsprint.set_ready_to_sprint(player,false)
-            player.stamina = 0
-        end
+        minetest_wadsprint.set_stamina(player, player.stamina - (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT))
     elseif player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
-        player.stamina = player.stamina + (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT)
-        if player.stamina > minetest_wadsprint.STAMINA_MAX_VALUE then
-            player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
-        end
+        minetest_wadsprint.set_stamina(player, player.stamina + (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT))
+    end
+end
+
+function minetest_wadsprint.set_stamina(player,stamina_value)
+    local old_stamina_value = player.stamina
+    if stamina_value < 0 then
+        minetest_wadsprint.set_sprinting(player,false)
+        minetest_wadsprint.set_ready_to_sprint(player,false)
+        player.stamina = 0
+    elseif stamina_value > minetest_wadsprint.STAMINA_MAX_VALUE then
+        player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
+    else
+        player.stamina = stamina_value
+    end
+    if old_stamina_value >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE and player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+        minetest_wadsprint.api.events:emit(
+            "dyspnea",
+            {
+                player = player,
+                value = true,
+                name = "dyspnea",
+            }
+        )
+    elseif old_stamina_value < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE and player.stamina >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+        minetest_wadsprint.api.events:emit(
+            "dyspnea",
+            {
+                player = player,
+                value = false,
+                name = "dyspnea",
+            }
+        )
     end
     minetest_wadsprint.hudbar_update_stamina(player)
 end
@@ -74,6 +110,9 @@ function minetest_wadsprint.set_sprinting_physics(player,is_on)
     end
 end
 
+-- If player.is_sprinting that means he is actually moving forward. If player is not moving then he
+-- isn't sprinting. `player.is_sprinting` could be nil if the value is not initialized. Nil is not 
+-- equal nor to true neither to false.
 function minetest_wadsprint.set_sprinting(player,is_sprinting)
     if player.is_sprinting ~= is_sprinting then
         if player.is_sprinting ~= nil then
@@ -91,6 +130,13 @@ function minetest_wadsprint.set_sprinting(player,is_sprinting)
     end
 end
 
+-- Main use of this function is to put player in a state when pressing "W" would trigger the 
+-- set_sprinting function thus you won't need to hold "A"+"D" to keep sprinting. Also it alters player
+-- physics to workaround lag between pressing "W" and actual set_sprinting call. So if player is ready
+-- to sprint it is sure that his physics is already in sprinting state and he can not afraid to fall
+-- while jumping from a tree to tree just because the lag between pressing "W" and set_sprinting call
+-- would be too big. At the same time being only ready to sprint and not actually sprinting does not
+-- decreases the stamina because decreasing stamina for nothing is unfair.
 function minetest_wadsprint.set_ready_to_sprint(player,is_ready_to_sprint)
     if player.is_ready_to_sprint ~= is_ready_to_sprint then
         if is_ready_to_sprint then
@@ -124,7 +170,7 @@ end
 
 function minetest_wadsprint.reset_stamina(player,stamina_value)
     if stamina_value == nil then stamina_value = minetest_wadsprint.STAMINA_MAX_VALUE end
-    player.stamina = stamina_value
+    minetest_wadsprint.set_stamina(player,stamina_value)
     minetest_wadsprint.set_sprinting(player,false)
     minetest_wadsprint.set_ready_to_sprint(player,false)
     return player
@@ -168,9 +214,20 @@ minetest.register_on_joinplayer(function(player_obj)
         player = { stamina = minetest_wadsprint.STAMINA_MAX_VALUE }
     end
     player.obj = player_obj
+    player.name = playername
     minetest_wadsprint.players[playername] = player   
     minetest_wadsprint.initialize_hudbar(player)
     minetest_wadsprint.reset_stamina(player,player.stamina)
+    if player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+        minetest_wadsprint.api.events:emit(
+            "dyspnea",
+            {
+                player = player,
+                value = true,
+                name = "dyspnea",
+            }
+        )
+    end
 end)
 
 minetest.register_on_respawnplayer(function(player_obj)
