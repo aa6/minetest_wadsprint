@@ -27,7 +27,7 @@ All dependencies are optional.
 
 **Dependents:**
 
-- [minetest_wadsprint](https://github.com/aa6/minetest_wadsprint)
+- [minetest_wadsprint_dyspnea](https://github.com/aa6/minetest_wadsprint_dyspnea)
 
 **Credits:**
 
