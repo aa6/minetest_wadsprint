@@ -18,6 +18,17 @@ http://wiki.minetest.com/wiki/Installing_mods
 
 Edit `config.lua` at the mod directory.
 
+**Dependencies:**
+
+All dependencies are optional.
+
+[hudbars?](http://repo.or.cz/minetest_hudbars.git)
+[hud?](https://github.com/BlockMen/hud_hunger)
+
+**Dependents:**
+
+[minetest_wadsprint](https://github.com/aa6/minetest_wadsprint)
+
 **Credits:**
 
 Thanks to [GunshipPenguin](https://github.com/GunshipPenguin) and his [sprint mod](https://github.com/GunshipPenguin/sprint) for showing a good example of how sprint mod for minetest can be done.
