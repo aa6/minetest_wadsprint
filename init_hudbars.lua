@@ -34,25 +34,25 @@ if minetest.get_modpath("hudbars") ~= nil then
             hb.change_hudbar(
                 player.obj,                                             -- `player`: `ObjectRef` of the player to which the new HUD bar should be displayed to.
                 minetest_wadsprint.HUDBARS_IDENTIFIER,                  -- `identifier`: The identifier of the HUD bar type, as specified in `hb.register_hudbar`.
-                nil,                                                    -- `new_value`:
-                nil,                                                    -- `new_max_value`:
-                minetest_wadsprint.HUDBARS_IS_SPRINTING_ICON,           -- `new_icon`:
-                nil,                                                    -- `new_bgicon`:
-                minetest_wadsprint.HUDBARS_PROGRESSBAR_SPRINTING_IMAGE, -- `new_bar`:
-                nil,                                                    -- `new_label`:
-                nil                                                     -- `new_text_color`:
+                nil,                                                    -- `new_value`: The new current value of the HUD bar.
+                nil,                                                    -- `new_max_value`: The new maximum value of the HUD bar.
+                minetest_wadsprint.HUDBARS_IS_SPRINTING_ICON,           -- `new_icon`: File name of the new icon.
+                nil,                                                    -- `new_bgicon`: File name of the new background icon for the modern-style statbar.
+                minetest_wadsprint.HUDBARS_PROGRESSBAR_SPRINTING_IMAGE, -- `new_bar`: File name of the new bar segment image.
+                nil,                                                    -- `new_label`: A new text label of the HUD bar. Note the format string still applies.
+                nil                                                     -- `new_text_color`: A 3-octet number defining the new color of the text.
             )
         else
             hb.change_hudbar(
                 player.obj,                                                 -- `player`: `ObjectRef` of the player to which the new HUD bar should be displayed to.
                 minetest_wadsprint.HUDBARS_IDENTIFIER,                      -- `identifier`: The identifier of the HUD bar type, as specified in `hb.register_hudbar`.
-                nil,                                                        -- `new_value`:
-                nil,                                                        -- `new_max_value`:
-                minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,           -- `new_icon`:
-                nil,                                                        -- `new_bgicon`:
-                minetest_wadsprint.HUDBARS_PROGRESSBAR_NOT_SPRINTING_IMAGE, -- `new_bar`:
-                nil,                                                        -- `new_label`:
-                nil                                                         -- `new_text_color`:
+                nil,                                                        -- `new_value`: The new current value of the HUD bar.
+                nil,                                                        -- `new_max_value`: The new maximum value of the HUD bar.
+                minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,           -- `new_icon`: File name of the new icon.
+                nil,                                                        -- `new_bgicon`: File name of the new background icon for the modern-style statbar.
+                minetest_wadsprint.HUDBARS_PROGRESSBAR_NOT_SPRINTING_IMAGE, -- `new_bar`: File name of the new bar segment image.
+                nil,                                                        -- `new_label`: A new text label of the HUD bar. Note the format string still applies.
+                nil                                                         -- `new_text_color`: A 3-octet number defining the new color of the text.
             )
         end
     end
