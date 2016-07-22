@@ -8,9 +8,9 @@ if minetest.get_modpath("hudbars") ~= nil then
             minetest_wadsprint.HUDBARS_TEXT_COLOR, -- `text_color`: A 3-octet number defining the color of the text. The octets denote, in this order red, green and blue and range from `0x00` (complete lack of this component) to `0xFF` (full intensity of this component). Example: `0xFFFFFF` for white.
             minetest_wadsprint.HUDBARS_TEXT_LABEL, -- `label`: A string which is displayed on the HUD bar itself to describe the HUD bar. Try to keep this string short.
             {                                      -- `textures`: A table with the following fields:
-                bar = minetest_wadsprint.HUDBARS_PROGRESSBAR_IMAGE,  -- `bar`: The file name of the bar image (as string). This is only used for the `progress_bar` bar type (see `README.txt`, settings section). The image for the bar will be repeated horizontally to denote the “value” of the HUD bar. It **must** be of size 2×16. If neccessary, the image will be split vertically in half, and only the left half of the image is displayed. So the final HUD bar will always be displayed on a per-pixel basis. The default bar images are single-colored, but you can use other styles as well, for instance, a vertical gradient.
-                icon = minetest_wadsprint.HUDBARS_IS_SPRINTING_ICON, -- `icon`: The file name of the icon, as string. For the `progress_bar` type, it is shown as single image left of the bar, for the two statbar bar types, it is used as the statbar icon and will be repeated. This field can be `nil`, in which case no icon will be used, but this is not recommended, because the HUD bar will be invisible if the one of the statbar bar types is used. Icon is a 16×16 image shown left of the HUD bar. This is optional.
-                bgicon = minetest_wadsprint.HUDBARS_BACKGROUND_ICON, -- `bgicon`: The file name of the background icon, it is used as the background for the modern statbar mode only. This field can be `nil`, in which case no background icon will be displayed in this mode. 
+                bar = minetest_wadsprint.HUDBARS_PROGRESSBAR_NOT_SPRINTING_IMAGE, -- `bar`: The file name of the bar image (as string). This is only used for the `progress_bar` bar type (see `README.txt`, settings section). The image for the bar will be repeated horizontally to denote the “value” of the HUD bar. It **must** be of size 2×16. If neccessary, the image will be split vertically in half, and only the left half of the image is displayed. So the final HUD bar will always be displayed on a per-pixel basis. The default bar images are single-colored, but you can use other styles as well, for instance, a vertical gradient.
+                icon = minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,          -- `icon`: The file name of the icon, as string. For the `progress_bar` type, it is shown as single image left of the bar, for the two statbar bar types, it is used as the statbar icon and will be repeated. This field can be `nil`, in which case no icon will be used, but this is not recommended, because the HUD bar will be invisible if the one of the statbar bar types is used. Icon is a 16×16 image shown left of the HUD bar. This is optional.
+                bgicon = minetest_wadsprint.HUDBARS_BACKGROUND_ICON,              -- `bgicon`: The file name of the background icon, it is used as the background for the modern statbar mode only. This field can be `nil`, in which case no background icon will be displayed in this mode. 
             },
             minetest_wadsprint.STAMINA_MAX_VALUE,  -- `default_start_value`: If this HUD bar is added to a player, and no initial value is specified, this value will be used as initial current value.
             minetest_wadsprint.STAMINA_MAX_VALUE,  -- `default_max_value`: If this HUD bar is added to a player, and no initial maximum value is specified, this value will be used as initial maximum value.
@@ -30,7 +30,31 @@ if minetest.get_modpath("hudbars") ~= nil then
         )
     end
     function minetest_wadsprint.hudbar_update_ready_to_sprint(player)
-        -- Hudbars mod doesn't allow to change icons. So this behaviour can't be implemented until it'll be supported.
+        if player.is_sprinting or player.is_ready_to_sprint then
+            hb.change_hudbar(
+                player.obj,                                             -- `player`: `ObjectRef` of the player to which the new HUD bar should be displayed to.
+                minetest_wadsprint.HUDBARS_IDENTIFIER,                  -- `identifier`: The identifier of the HUD bar type, as specified in `hb.register_hudbar`.
+                nil,                                                    -- `new_value`:
+                nil,                                                    -- `new_max_value`:
+                minetest_wadsprint.HUDBARS_IS_SPRINTING_ICON,           -- `new_icon`:
+                nil,                                                    -- `new_bgicon`:
+                minetest_wadsprint.HUDBARS_PROGRESSBAR_SPRINTING_IMAGE, -- `new_bar`:
+                nil,                                                    -- `new_label`:
+                nil                                                     -- `new_text_color`:
+            )
+        else
+            hb.change_hudbar(
+                player.obj,                                                 -- `player`: `ObjectRef` of the player to which the new HUD bar should be displayed to.
+                minetest_wadsprint.HUDBARS_IDENTIFIER,                      -- `identifier`: The identifier of the HUD bar type, as specified in `hb.register_hudbar`.
+                nil,                                                        -- `new_value`:
+                nil,                                                        -- `new_max_value`:
+                minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,           -- `new_icon`:
+                nil,                                                        -- `new_bgicon`:
+                minetest_wadsprint.HUDBARS_PROGRESSBAR_NOT_SPRINTING_IMAGE, -- `new_bar`:
+                nil,                                                        -- `new_label`:
+                nil                                                         -- `new_text_color`:
+            )
+        end
     end
     function minetest_wadsprint.hudbar_update_stamina(player)
         -- After a HUD bar has been added, you can change the current and maximum value on a per-player basis. You use the function `hb.change_hudbar` for this. It changes the values of an initialized HUD bar for a certain player. `new_value` and `new_max_value` can be `nil`; if one of them is `nil`, that means the value is unchanged. If both values are `nil`, this function is a no-op. This function also tries minimize the amount of calls to `hud_change` of the Minetest Lua API, and therefore, network traffic. `hud_change` is only called if it is actually needed, i.e. when the actual length of the bar or the displayed string changed, so you do not have to worry about it.

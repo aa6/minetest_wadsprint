@@ -11,14 +11,15 @@ minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.005
 minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.001 -- 1 means 100% increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).
 -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
-minetest_wadsprint.HUDBARS_IDENTIFIER            = "sprint"
-minetest_wadsprint.HUDBARS_TEXT_COLOR            = 0xFFFFFF
-minetest_wadsprint.HUDBARS_TEXT_LABEL            = "Stamina"
-minetest_wadsprint.HUDBARS_TEXT_FORMAT           = "%s: %d/%d"
-minetest_wadsprint.HUDBARS_BACKGROUND_ICON       = nil
-minetest_wadsprint.HUDBARS_PROGRESSBAR_IMAGE     = "minetest_wadsprint_hudbars_progressbar.png"
-minetest_wadsprint.HUDBARS_IS_SPRINTING_ICON     = "minetest_wadsprint_is_sprinting_icon.png"
-minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON = "minetest_wadsprint_is_not_sprinting_icon.png" -- Unsupported yet.
+minetest_wadsprint.HUDBARS_IDENTIFIER                      = "sprint"
+minetest_wadsprint.HUDBARS_TEXT_COLOR                      = 0xFFFFFF
+minetest_wadsprint.HUDBARS_TEXT_LABEL                      = "Stamina"
+minetest_wadsprint.HUDBARS_TEXT_FORMAT                     = "%s: %d/%d"
+minetest_wadsprint.HUDBARS_BACKGROUND_ICON                 = nil
+minetest_wadsprint.HUDBARS_IS_SPRINTING_ICON               = "minetest_wadsprint_is_sprinting_icon.png"
+minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON           = "minetest_wadsprint_is_not_sprinting_icon.png" -- Unsupported yet.
+minetest_wadsprint.HUDBARS_PROGRESSBAR_SPRINTING_IMAGE     = "minetest_wadsprint_hudbars_sprinting_progressbar.png"
+minetest_wadsprint.HUDBARS_PROGRESSBAR_NOT_SPRINTING_IMAGE = "minetest_wadsprint_hudbars_not_sprinting_progressbar.png"
 -- Config values for `hud_hunger` mod (totally optional, applied only if installed).
 -- @see https://github.com/BlockMen/hud_hunger/blob/master/API.txt
 minetest_wadsprint.HUDHUNGER_BAR_NAME              = "sprint"
