@@ -48,7 +48,7 @@ if minetest.get_modpath("hudbars") ~= nil then
                 minetest_wadsprint.HUDBARS_IDENTIFIER,                  -- `identifier`: The identifier of the HUD bar type, as specified in `hb.register_hudbar`.
                 nil,                                                    -- `new_value`: The new current value of the HUD bar.
                 nil,                                                    -- `new_max_value`: The new maximum value of the HUD bar.
-                minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,           -- `new_icon`: File name of the new icon.
+                minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,       -- `new_icon`: File name of the new icon.
                 nil,                                                    -- `new_bgicon`: File name of the new background icon for the modern-style statbar.
                 minetest_wadsprint.HUDBARS_PROGRESSBAR_SPRINTING_IMAGE, -- `new_bar`: File name of the new bar segment image.
                 nil,                                                    -- `new_label`: A new text label of the HUD bar. Note the format string still applies.
