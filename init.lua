@@ -1,19 +1,26 @@
 -- WAD SPRINTING minetest (https://minetest.net) mod (https://dev.minetest.net/Intro)
 -- @link https://github.com/aa6/minetest_wadsprint
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_savetable.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_exists.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.lua")
 minetest_wadsprint = 
 {
-    api = {},
-    players = {},
+    api = { events = EventEmitter:new() },
+    players = 
+    {
+      -- playername:
+      --   name: playername
+      --   stamina:
+      --   is_sprinting:
+      --   is_ready_to_sprint:
+      --   is_sprinting_physics_on:
+    },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
     savedstats = { index = {} },
     savetablepath = minetest.get_modpath(minetest.get_current_modname()).."/saved_players_stats.dat",
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_savetable.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_exists.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.lua")
-minetest_wadsprint.api.events = EventEmitter:new()
 
 function minetest_wadsprint.api.stats(player_name)
     local player = minetest_wadsprint.players[player_name]
@@ -26,9 +33,11 @@ function minetest_wadsprint.api.stats(player_name)
                 is_ready_to_sprint = player.is_ready_to_sprint,
                 is_sprinting_physics_on = player.is_sprinting_physics_on,
             }
-    end  
+    end
 end
 
+-- minetest_wadsprint.api.stamina(player_name) to get stamina
+-- minetest_wadsprint.api.stamina(player_name, 0.5) to set stamina to half of STAMINA_MAX_VALUE
 function minetest_wadsprint.api.stamina(player_name,stamina_rate)
     local player = minetest_wadsprint.players[player_name]
     if player ~= nil then
@@ -40,6 +49,7 @@ function minetest_wadsprint.api.stamina(player_name,stamina_rate)
     end  
 end
 
+-- minetest_wadsprint.api.addstamina(player_name, 0.1) to add 10% of STAMINA_MAX_VALUE
 function minetest_wadsprint.api.addstamina(player_name,stamina_rate_change)
     local player = minetest_wadsprint.players[player_name]
     if player ~= nil then
@@ -70,18 +80,18 @@ function minetest_wadsprint.set_stamina(player,stamina_value)
         minetest_wadsprint.api.events:emit(
             "dyspnea",
             {
-                player = player,
-                value = true,
                 name = "dyspnea",
+                value = true,
+                player = player,
             }
         )
     elseif old_stamina_value < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE and player.stamina >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
         minetest_wadsprint.api.events:emit(
             "dyspnea",
             {
-                player = player,
-                value = false,
                 name = "dyspnea",
+                value = false,
+                player = player,
             }
         )
     end
@@ -222,9 +232,9 @@ minetest.register_on_joinplayer(function(player_obj)
         minetest_wadsprint.api.events:emit(
             "dyspnea",
             {
-                player = player,
-                value = true,
                 name = "dyspnea",
+                value = true,
+                player = player,
             }
         )
     end
