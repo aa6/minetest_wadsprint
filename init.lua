@@ -65,6 +65,43 @@ function minetest_wadsprint.stamina_update_cycle(player)
     end
 end
 
+function minetest_wadsprint.scan_player_controls(player)
+    local control = player.obj:get_player_control()
+    if player.is_sprinting and not control["up"] then
+        minetest_wadsprint.set_sprinting(player,false)
+    end
+    if control["left"] and control["right"] and not control["down"] then
+        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+          minetest_wadsprint.set_ready_to_sprint(player,true)
+          if control["up"] then
+              minetest_wadsprint.set_sprinting(player,true)
+          end
+        end
+    else
+        minetest_wadsprint.set_ready_to_sprint(player,false)
+    end
+end
+
+-- If player.is_sprinting that means he is actually moving forward. If player is not moving then he
+-- isn't sprinting. `player.is_sprinting` could be nil if the value is not initialized. Nil is not 
+-- equal nor to true neither to false.
+function minetest_wadsprint.set_sprinting(player,is_sprinting)
+    if player.is_sprinting ~= is_sprinting then
+        if player.is_sprinting ~= nil then
+            if is_sprinting then
+                minetest_wadsprint.set_sprinting_physics(player,true)
+            else
+                if not player.is_ready_to_sprint then
+                    minetest_wadsprint.set_sprinting_physics(player,false)
+                end
+            end
+        end
+        player.is_sprinting = is_sprinting
+        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
+        minetest_wadsprint.hudbar_update_stamina(player)
+    end
+end
+
 function minetest_wadsprint.set_stamina(player,stamina_value)
     local old_stamina_value = player.stamina
     if stamina_value < 0 then
@@ -120,26 +157,6 @@ function minetest_wadsprint.set_sprinting_physics(player,is_on)
     end
 end
 
--- If player.is_sprinting that means he is actually moving forward. If player is not moving then he
--- isn't sprinting. `player.is_sprinting` could be nil if the value is not initialized. Nil is not 
--- equal nor to true neither to false.
-function minetest_wadsprint.set_sprinting(player,is_sprinting)
-    if player.is_sprinting ~= is_sprinting then
-        if player.is_sprinting ~= nil then
-            if is_sprinting then
-                minetest_wadsprint.set_sprinting_physics(player,true)
-            else
-                if not player.is_ready_to_sprint then
-                    minetest_wadsprint.set_sprinting_physics(player,false)
-                end
-            end
-        end
-        player.is_sprinting = is_sprinting
-        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
-        minetest_wadsprint.hudbar_update_stamina(player)
-    end
-end
-
 -- Main use of this function is to put player in a state when pressing "W" would trigger the 
 -- set_sprinting function thus you won't need to hold "A"+"D" to keep sprinting. Also it alters player
 -- physics to workaround lag between pressing "W" and actual set_sprinting call. So if player is ready
@@ -158,23 +175,6 @@ function minetest_wadsprint.set_ready_to_sprint(player,is_ready_to_sprint)
         end
         player.is_ready_to_sprint = is_ready_to_sprint
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
-    end
-end
-
-function minetest_wadsprint.scan_player_controls(player)
-    local control = player.obj:get_player_control()
-    if not control["up"] then
-        minetest_wadsprint.set_sprinting(player,false)
-    end
-    if control["left"] and control["right"] and not control["down"] then
-        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-          minetest_wadsprint.set_ready_to_sprint(player,true)
-          if control["up"] then
-              minetest_wadsprint.set_sprinting(player,true)
-          end
-        end
-    else
-        minetest_wadsprint.set_ready_to_sprint(player,false)
     end
 end
 
@@ -266,7 +266,7 @@ end
 -- Main cycle.
 local timer_stats_update = 0
 local timer_controls_check = 0
-minetest.register_globalstep(function(dtime)
+minetest.register_globalstep(function(dtime) -- Called every server step, usually interval of 0.05s.
     timer_stats_update = timer_stats_update + dtime
     timer_controls_check = timer_controls_check + dtime
     if timer_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
