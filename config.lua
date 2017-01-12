@@ -7,8 +7,8 @@ minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS                    = 1
 minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS                  = 0.2
 minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT                     = 3.8
 minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT               = 1.1
-minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.0005 -- 1 means 100% decrease
-minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.0001 -- 1 means 100% increase
+minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.0005 -- 0.1 means 10% decrease
+minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.0001 -- 0.1 means 10% increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).
 -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
 minetest_wadsprint.HUDBARS_IDENTIFIER                      = "sprint"

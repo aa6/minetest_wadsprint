@@ -22,6 +22,7 @@ minetest_wadsprint =
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 
+-- Call `minetest_wadsprint.api.stats(player_name)` to get player's stats.
 function minetest_wadsprint.api.stats(player_name)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
@@ -36,8 +37,8 @@ function minetest_wadsprint.api.stats(player_name)
     end
 end
 
--- minetest_wadsprint.api.stamina(player_name) to get stamina
--- minetest_wadsprint.api.stamina(player_name, 0.5) to set stamina to half of STAMINA_MAX_VALUE
+-- Call `minetest_wadsprint.api.stamina(player_name)` to get stamina
+-- Call `minetest_wadsprint.api.stamina(player_name, 0.5)` to SET stamina to half of STAMINA_MAX_VALUE
 function minetest_wadsprint.api.stamina(player_name,stamina_rate)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
@@ -49,7 +50,7 @@ function minetest_wadsprint.api.stamina(player_name,stamina_rate)
     end  
 end
 
--- minetest_wadsprint.api.addstamina(player_name, 0.1) to add 10% of STAMINA_MAX_VALUE
+-- Call `minetest_wadsprint.api.addstamina(player_name, 0.1)` to add 10% of STAMINA_MAX_VALUE
 function minetest_wadsprint.api.addstamina(player_name,stamina_rate_change)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
