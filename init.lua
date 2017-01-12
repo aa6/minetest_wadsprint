@@ -17,7 +17,7 @@ minetest_wadsprint =
     },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
     savepath = minetest.get_modpath(minetest.get_current_modname()).."/saved_players_stats.dat",
-    offline_players_stats = { index = {} }, -- Offline stats aren't processing in the main cycle.
+    offline_players_stats = { index = {} }, -- Offline stats aren't processed in the main cycle.
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
