@@ -6,24 +6,24 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.
 minetest_wadsprint = 
 {
     api = { events = EventEmitter:new() },
-    players = 
+    stats = -- Online players' stats.
     {
-      -- playername:
-      --   name: playername
+      -- <playername>:
+      --   name: <playername>
       --   stamina:
       --   is_sprinting:
       --   is_ready_to_sprint:
       --   is_sprinting_physics_on:
     },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
-    savedstats = { index = {} },
-    savetablepath = minetest.get_modpath(minetest.get_current_modname()).."/saved_players_stats.dat",
+    savepath = minetest.get_modpath(minetest.get_current_modname()).."/saved_players_stats.dat",
+    offline_players_stats = { index = {} }, -- Offline stats aren't processing in the main cycle.
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 
 function minetest_wadsprint.api.stats(player_name)
-    local player = minetest_wadsprint.players[player_name]
+    local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
         return 
             {
@@ -39,7 +39,7 @@ end
 -- minetest_wadsprint.api.stamina(player_name) to get stamina
 -- minetest_wadsprint.api.stamina(player_name, 0.5) to set stamina to half of STAMINA_MAX_VALUE
 function minetest_wadsprint.api.stamina(player_name,stamina_rate)
-    local player = minetest_wadsprint.players[player_name]
+    local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
         if stamina_value ~= nil then
             minetest_wadsprint.set_stamina(player, minetest_wadsprint.STAMINA_MAX_VALUE * stamina_value)
@@ -51,7 +51,7 @@ end
 
 -- minetest_wadsprint.api.addstamina(player_name, 0.1) to add 10% of STAMINA_MAX_VALUE
 function minetest_wadsprint.api.addstamina(player_name,stamina_rate_change)
-    local player = minetest_wadsprint.players[player_name]
+    local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
         minetest_wadsprint.set_stamina(player, player.stamina + minetest_wadsprint.STAMINA_MAX_VALUE * stamina_value)
     end  
@@ -189,12 +189,12 @@ end
 function minetest_wadsprint.save_players_stats()
     local stats = {}
     local counter = 1
-    for key,val in pairs(minetest_wadsprint.players) do
+    for key,val in pairs(minetest_wadsprint.stats) do
       stats[counter] = { name = key, stamina = val.stamina }
       counter = counter + 1
     end
-    for key,val in ipairs(minetest_wadsprint.savedstats) do
-      if minetest_wadsprint.players[val.name] == nil then
+    for key,val in ipairs(minetest_wadsprint.offline_players_stats) do
+      if minetest_wadsprint.stats[val.name] == nil then
           stats[counter] = { name = val.name, stamina = val.stamina }
           counter = counter + 1
       end
@@ -202,15 +202,15 @@ function minetest_wadsprint.save_players_stats()
           break
       end
     end
-    table.save(stats,minetest_wadsprint.savetablepath)
+    table.save(stats,minetest_wadsprint.savepath)
 end
 
 function minetest_wadsprint.load_players_stats()
-    if file_exists(minetest_wadsprint.savetablepath) then
-         minetest_wadsprint.savedstats = table.load(minetest_wadsprint.savetablepath)
-         minetest_wadsprint.savedstats.index = {}
-         for key,val in ipairs(minetest_wadsprint.savedstats) do
-            minetest_wadsprint.savedstats.index[val.name] = { stamina = val.stamina }
+    if file_exists(minetest_wadsprint.savepath) then
+         minetest_wadsprint.offline_players_stats = table.load(minetest_wadsprint.savepath)
+         minetest_wadsprint.offline_players_stats.index = {}
+         for key,val in ipairs(minetest_wadsprint.offline_players_stats) do
+            minetest_wadsprint.offline_players_stats.index[val.name] = { stamina = val.stamina }
         end
     end
 end
@@ -218,14 +218,14 @@ end
 minetest.register_on_joinplayer(function(player_obj)
     local player = {}
     local playername = player_obj:get_player_name()
-    if minetest_wadsprint.savedstats.index[playername] ~= nil then
-        player = minetest_wadsprint.savedstats.index[playername]
+    if minetest_wadsprint.offline_players_stats.index[playername] ~= nil then
+        player = minetest_wadsprint.offline_players_stats.index[playername]
     else
         player = { stamina = minetest_wadsprint.STAMINA_MAX_VALUE }
     end
     player.obj = player_obj
     player.name = playername
-    minetest_wadsprint.players[playername] = player   
+    minetest_wadsprint.stats[playername] = player   
     minetest_wadsprint.initialize_hudbar(player)
     minetest_wadsprint.reset_stamina(player,player.stamina)
     if player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
@@ -241,15 +241,15 @@ minetest.register_on_joinplayer(function(player_obj)
 end)
 
 minetest.register_on_respawnplayer(function(player_obj)
-  minetest_wadsprint.reset_stamina(minetest_wadsprint.players[player_obj:get_player_name()])
+  minetest_wadsprint.reset_stamina(minetest_wadsprint.stats[player_obj:get_player_name()])
 end)
 
 minetest.register_on_leaveplayer(function(player_obj)
     local playername = player_obj:get_player_name()
-    local player = minetest_wadsprint.players[playername]
-    table.insert(minetest_wadsprint.savedstats, 1, { name = playername, stamina = player.stamina})
-    minetest_wadsprint.savedstats.index[playername] = { stamina = player.stamina }
-    minetest_wadsprint.players[playername] = nil
+    local player = minetest_wadsprint.stats[playername]
+    table.insert(minetest_wadsprint.offline_players_stats, 1, { name = playername, stamina = player.stamina})
+    minetest_wadsprint.offline_players_stats.index[playername] = { stamina = player.stamina }
+    minetest_wadsprint.stats[playername] = nil
 end)
 
 -- Register hudbar call for compatibility with some hudbar mods.
@@ -271,13 +271,13 @@ minetest.register_globalstep(function(dtime) -- Called every server step, usuall
     timer_controls_check = timer_controls_check + dtime
     if timer_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
         timer_stats_update = 0
-        for player_name,player in pairs(minetest_wadsprint.players) do
+        for player_name,player in pairs(minetest_wadsprint.stats) do
             minetest_wadsprint.stamina_update_cycle(player)
         end
     end
     if timer_controls_check > minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS then
         timer_controls_check = 0
-        for player_name,player in pairs(minetest_wadsprint.players) do
+        for player_name,player in pairs(minetest_wadsprint.stats) do
             minetest_wadsprint.scan_player_controls(player)
         end
     end
