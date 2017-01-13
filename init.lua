@@ -174,7 +174,7 @@ end
 ----------------------------------------------------------------------------------------------------
 function minetest_wadsprint.scan_player_controls(player)
     local control = player.obj:get_player_control()
-    if (player.is_sprinting and control["up"]) then 
+    if player.is_sprinting and control["up"] then 
         return 
     end
     if control["left"] and control["right"] and not control["down"] then
