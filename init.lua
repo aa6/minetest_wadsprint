@@ -9,15 +9,20 @@ minetest_wadsprint =
     stats = -- Online players' stats.
     {
       -- <playername>:
+      --   obj: <player object>
       --   name: <playername>
       --   stamina:
       --   is_sprinting:
       --   is_ready_to_sprint:
       --   is_sprinting_physics_on:
     },
+    offline_stats = -- Offline stats aren't processed in the main cycle.
+    {
+      -- <playername>:
+      --   stamina:
+    },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
     savepath = minetest.get_modpath(minetest.get_current_modname()).."/saved_players_stats.dat",
-    offline_players_stats = { index = {} }, -- Offline stats aren't processed in the main cycle.
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
@@ -194,7 +199,7 @@ function minetest_wadsprint.save_players_stats()
       stats[counter] = { name = key, stamina = val.stamina }
       counter = counter + 1
     end
-    for key,val in ipairs(minetest_wadsprint.offline_players_stats) do
+    for key,val in ipairs(minetest_wadsprint.offline_stats) do
       if minetest_wadsprint.stats[val.name] == nil then
           stats[counter] = { name = val.name, stamina = val.stamina }
           counter = counter + 1
@@ -208,10 +213,10 @@ end
 
 function minetest_wadsprint.load_players_stats()
     if file_exists(minetest_wadsprint.savepath) then
-         minetest_wadsprint.offline_players_stats = table.load(minetest_wadsprint.savepath)
-         minetest_wadsprint.offline_players_stats.index = {}
-         for key,val in ipairs(minetest_wadsprint.offline_players_stats) do
-            minetest_wadsprint.offline_players_stats.index[val.name] = { stamina = val.stamina }
+         local raw_saved_stats = table.load(minetest_wadsprint.savepath)
+         minetest_wadsprint.offline_stats = {}
+         for key,val in ipairs(raw_saved_stats) do
+            minetest_wadsprint.offline_stats[val.name] = { stamina = val.stamina }
         end
     end
 end
@@ -219,8 +224,8 @@ end
 minetest.register_on_joinplayer(function(player_obj)
     local player = {}
     local playername = player_obj:get_player_name()
-    if minetest_wadsprint.offline_players_stats.index[playername] ~= nil then
-        player = minetest_wadsprint.offline_players_stats.index[playername]
+    if minetest_wadsprint.offline_stats[playername] ~= nil then
+        player = minetest_wadsprint.offline_stats[playername]
     else
         player = { stamina = minetest_wadsprint.STAMINA_MAX_VALUE }
     end
@@ -248,8 +253,8 @@ end)
 minetest.register_on_leaveplayer(function(player_obj)
     local playername = player_obj:get_player_name()
     local player = minetest_wadsprint.stats[playername]
-    table.insert(minetest_wadsprint.offline_players_stats, 1, { name = playername, stamina = player.stamina})
-    minetest_wadsprint.offline_players_stats.index[playername] = { stamina = player.stamina }
+    table.insert(minetest_wadsprint.offline_stats, 1, { name = playername, stamina = player.stamina})
+    minetest_wadsprint.offline_stats[playername] = { stamina = player.stamina }
     minetest_wadsprint.stats[playername] = nil
 end)
 
