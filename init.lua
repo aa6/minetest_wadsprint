@@ -162,18 +162,19 @@ end
 ----------------------------------------------------------------------------------------------------
 function minetest_wadsprint.scan_player_controls(player)
     local control = player.obj:get_player_control()
-    if not (player.is_sprinting and control["up"]) then
-        if control["left"] and control["right"] and not control["down"] then
-            if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-                if control["up"] then
-                    minetest_wadsprint.switch_to_sprinting(player)
-                else
-                    minetest_wadsprint.switch_to_ready_to_sprint(player)
-                end
+    if (player.is_sprinting and control["up"]) then 
+        return 
+    end
+    if control["left"] and control["right"] and not control["down"] then
+        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+            if control["up"] then
+                minetest_wadsprint.switch_to_sprinting(player)
+            else
+                minetest_wadsprint.switch_to_ready_to_sprint(player)
             end
-        else
-            minetest_wadsprint.switch_to_walking(player)
         end
+    else
+        minetest_wadsprint.switch_to_walking(player)
     end
 end
 ----------------------------------------------------------------------------------------------------
