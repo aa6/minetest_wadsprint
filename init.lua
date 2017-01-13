@@ -12,6 +12,7 @@ minetest_wadsprint =
       --   obj: <player object>
       --   name: <playername>
       --   stamina:
+      --   is_walking:
       --   is_sprinting:
       --   is_ready_to_sprint:
       --   is_sprinting_physics_on:
@@ -33,10 +34,11 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua"
 function minetest_wadsprint.api.stats(player_name)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
-        return 
+        return -- Return copied values to be sure that they won't be changed directly by accident.
             {
                 name = player_name,
                 stamina = player.stamina,
+                is_walking = player.is_walking,
                 is_sprinting = player.is_sprinting,
                 is_ready_to_sprint = player.is_ready_to_sprint,
                 is_sprinting_physics_on = player.is_sprinting_physics_on,
@@ -79,80 +81,57 @@ function minetest_wadsprint.stamina_update_cycle(player)
     end
 end
 ----------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------- scan_player_controls() --
+----------------------------------------------------------------------------- switch_to_walking() --
 ----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.scan_player_controls(player)
-    local control = player.obj:get_player_control()
-    if player.is_sprinting and not control["up"] then
-        minetest_wadsprint.set_sprinting(player,false)
-    end
-    if control["left"] and control["right"] and not control["down"] then
-        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-          minetest_wadsprint.set_ready_to_sprint(player,true)
-          if control["up"] then
-              minetest_wadsprint.set_sprinting(player,true)
-          end
+function minetest_wadsprint.switch_to_walking(player)
+    if player.is_walking == false then
+        if player.is_sprinting_physics_on == true then 
+            minetest_wadsprint.set_sprinting_physics(player,false)
         end
-    else
-        minetest_wadsprint.set_ready_to_sprint(player,false)
-    end
-end
-----------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------- set_sprinting() --
-----------------------------------------------------------------------------------------------------
--- If player.is_sprinting that means he is actually moving forward. If player is not moving then he
--- isn't sprinting. `player.is_sprinting` could be nil if the value is not initialized. Nil is not 
--- equal nor to true neither to false.
-function minetest_wadsprint.set_sprinting(player,is_sprinting)
-    if player.is_sprinting ~= is_sprinting then
-        if player.is_sprinting ~= nil then
-            if is_sprinting then
-                minetest_wadsprint.set_sprinting_physics(player,true)
-            else
-                if not player.is_ready_to_sprint then
-                    minetest_wadsprint.set_sprinting_physics(player,false)
-                end
-            end
-        end
-        player.is_sprinting = is_sprinting
+        player.is_walking = true
+        player.is_sprinting = false
+        player.is_ready_to_sprint = false
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         minetest_wadsprint.hudbar_update_stamina(player)
     end
 end
 ----------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------ set_stamina() --
+--------------------------------------------------------------------- switch_to_ready_to_sprint() --
 ----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.set_stamina(player,stamina_value)
-    local old_stamina_value = player.stamina
-    if stamina_value < 0 then
-        minetest_wadsprint.set_sprinting(player,false)
-        minetest_wadsprint.set_ready_to_sprint(player,false)
-        player.stamina = 0
-    elseif stamina_value > minetest_wadsprint.STAMINA_MAX_VALUE then
-        player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
-    else
-        player.stamina = stamina_value
+-- Main use of this function is to put player in a state when pressing "W" would trigger the 
+-- sprinting state thus you won't need to hold "A"+"D" to keep sprinting. Also it alters player 
+-- physics to workaround lag between pressing "W" and actual sprinting. So if player is ready to 
+-- sprint it is sure that his physics is already in sprinting state and he can not afraid to fall
+-- while jumping from a tree to tree just because the lag between pressing "W" and sprinting state
+-- would be too big. At the same time being only ready to sprint and not actually sprinting does 
+-- not decreases the stamina because decreasing stamina for not sprinting is unfair.
+function minetest_wadsprint.switch_to_ready_to_sprint(player)
+    if player.is_ready_to_sprint == false then
+        if player.is_sprinting_physics_on == false then 
+            minetest_wadsprint.set_sprinting_physics(player,true)
+        end
+        player.is_walking = false
+        player.is_sprinting = false
+        player.is_ready_to_sprint = true
+        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
+        minetest_wadsprint.hudbar_update_stamina(player)
     end
-    if old_stamina_value >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE and player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-        minetest_wadsprint.api.events:emit(
-            "dyspnea",
-            {
-                name = "dyspnea",
-                value = true,
-                player = player,
-            }
-        )
-    elseif old_stamina_value < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE and player.stamina >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-        minetest_wadsprint.api.events:emit(
-            "dyspnea",
-            {
-                name = "dyspnea",
-                value = false,
-                player = player,
-            }
-        )
+end
+----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------- switch_to_sprinting() --
+----------------------------------------------------------------------------------------------------
+-- Sprinting means that player is moving forward. If player isn't moving then he isn't sprinting.
+function minetest_wadsprint.switch_to_sprinting(player)
+    if player.is_sprinting == false then
+        if player.is_sprinting_physics_on == false then 
+            minetest_wadsprint.set_sprinting_physics(player,true)
+        end
+        player.is_walking = false
+        player.is_sprinting = true
+        player.is_ready_to_sprint = false
+        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
+        minetest_wadsprint.hudbar_update_stamina(player)
     end
-    minetest_wadsprint.hudbar_update_stamina(player)
 end
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------- set_sprinting_physics() --
@@ -179,37 +158,106 @@ function minetest_wadsprint.set_sprinting_physics(player,is_on)
     end
 end
 ----------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------- set_ready_to_sprint() --
+-------------------------------------------------------------------------- scan_player_controls() --
 ----------------------------------------------------------------------------------------------------
--- Main use of this function is to put player in a state when pressing "W" would trigger the 
--- set_sprinting function thus you won't need to hold "A"+"D" to keep sprinting. Also it alters 
--- player physics to workaround lag between pressing "W" and actual set_sprinting call. So if player
--- is ready to sprint it is sure that his physics is already in sprinting state and he can not
--- afraid to fall while jumping from a tree to tree just because the lag between pressing "W" and
--- set_sprinting call would be too big. At the same time being only ready to sprint and not actually
--- sprinting does not decreases the stamina because decreasing stamina for nothing is unfair.
-function minetest_wadsprint.set_ready_to_sprint(player,is_ready_to_sprint)
-    if player.is_ready_to_sprint ~= is_ready_to_sprint then
-        if is_ready_to_sprint then
-            minetest_wadsprint.set_sprinting_physics(player,true)
-        else
-            if not player.is_sprinting then
-                minetest_wadsprint.set_sprinting_physics(player,false)  
+function minetest_wadsprint.scan_player_controls(player)
+    local control = player.obj:get_player_control()
+    if not (player.is_sprinting and control["up"]) then
+        if control["left"] and control["right"] and not control["down"] then
+            if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+                if control["up"] then
+                    minetest_wadsprint.switch_to_sprinting(player)
+                else
+                    minetest_wadsprint.switch_to_ready_to_sprint(player)
+                end
             end
+        else
+            minetest_wadsprint.switch_to_walking(player)
         end
-        player.is_ready_to_sprint = is_ready_to_sprint
-        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
     end
 end
 ----------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------- reset_stamina() --
+----------------------------------------------------------------------------------- set_stamina() --
 ----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.reset_stamina(player,stamina_value)
-    if stamina_value == nil then stamina_value = minetest_wadsprint.STAMINA_MAX_VALUE end
-    minetest_wadsprint.set_stamina(player,stamina_value)
-    minetest_wadsprint.set_sprinting(player,false)
-    minetest_wadsprint.set_ready_to_sprint(player,false)
-    return player
+function minetest_wadsprint.set_stamina(player,stamina_value)
+    local old_stamina_value = player.stamina
+    if stamina_value < 0 then
+        minetest_wadsprint.switch_to_walking(player)
+        player.stamina = 0
+    elseif stamina_value > minetest_wadsprint.STAMINA_MAX_VALUE then
+        player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
+    else
+        player.stamina = stamina_value
+    end
+    if old_stamina_value >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE 
+    and player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+        minetest_wadsprint.api.events:emit(
+            "dyspnea",
+            {
+                name = "dyspnea",
+                value = true,
+                player = player,
+            }
+        )
+    elseif old_stamina_value < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE 
+    and player.stamina >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+        minetest_wadsprint.api.events:emit(
+            "dyspnea",
+            {
+                name = "dyspnea",
+                value = false,
+                player = player,
+            }
+        )
+    end
+    minetest_wadsprint.hudbar_update_stamina(player)
+end
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------- initialize_player() --
+----------------------------------------------------------------------------------------------------
+function minetest_wadsprint.initialize_player(player_obj)
+    local player = 
+    {
+        obj = player_obj,
+        name = player_obj:get_player_name(),
+        is_walking = true,
+        is_sprinting = false,
+        is_ready_to_sprint = false,
+        is_sprinting_physics_on = false,
+    }
+    if minetest_wadsprint.offline_stats[player.name] ~= nil then
+        player.stamina = minetest_wadsprint.offline_stats[player.name].stamina
+    else
+        player.stamina = minetest_wadsprint.STAMINA_MAX_VALUE
+    end
+    minetest_wadsprint.stats[player.name] = player
+    minetest_wadsprint.initialize_hudbar(player)
+    if player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+        minetest_wadsprint.api.events:emit(
+            "dyspnea",
+            {
+                name = "dyspnea",
+                value = true,
+                player = player,
+            }
+        )
+    end
+end
+----------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------- reset_player() --
+----------------------------------------------------------------------------------------------------
+function minetest_wadsprint.reset_player(player_obj)
+    local player = minetest_wadsprint.stats[player_obj:get_player_name()]
+    minetest_wadsprint.set_stamina(player,minetest_wadsprint.STAMINA_MAX_VALUE)
+    minetest_wadsprint.switch_to_walking(player)
+end
+----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------- deinitialize_player() --
+----------------------------------------------------------------------------------------------------
+function minetest_wadsprint.deinitialize_player(player_obj)
+    local player = minetest_wadsprint.stats[player_obj:get_player_name()]
+    minetest_wadsprint.offline_stats[player.name] = { stamina = player.stamina, was_online = true }
+    minetest_wadsprint.stats[player.name] = nil
 end
 ----------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------- save_players_stats() --
@@ -222,12 +270,17 @@ function minetest_wadsprint.save_players_stats()
       counter = counter + 1
     end
     for key,val in ipairs(minetest_wadsprint.offline_stats) do
-      if minetest_wadsprint.stats[val.name] == nil then
+      if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS then break end
+      if minetest_wadsprint.stats[val.name] == nil and val.was_online ~= nil then
           stats[counter] = { name = val.name, stamina = val.stamina }
           counter = counter + 1
       end
-      if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS + 1 then
-          break
+    end
+    for key,val in ipairs(minetest_wadsprint.offline_stats) do
+      if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS then break end
+      if minetest_wadsprint.stats[val.name] == nil and val.was_online == nil then
+          stats[counter] = { name = val.name, stamina = val.stamina }
+          counter = counter + 1
       end
     end
     table.save(stats,minetest_wadsprint.savepath)
@@ -247,42 +300,9 @@ end
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------ Mod initialization --
 ----------------------------------------------------------------------------------------------------
-minetest.register_on_joinplayer(function(player_obj)
-    local player = {}
-    local playername = player_obj:get_player_name()
-    if minetest_wadsprint.offline_stats[playername] ~= nil then
-        player = minetest_wadsprint.offline_stats[playername]
-    else
-        player = { stamina = minetest_wadsprint.STAMINA_MAX_VALUE }
-    end
-    player.obj = player_obj
-    player.name = playername
-    minetest_wadsprint.stats[playername] = player   
-    minetest_wadsprint.initialize_hudbar(player)
-    minetest_wadsprint.reset_stamina(player,player.stamina)
-    if player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-        minetest_wadsprint.api.events:emit(
-            "dyspnea",
-            {
-                name = "dyspnea",
-                value = true,
-                player = player,
-            }
-        )
-    end
-end)
-
-minetest.register_on_respawnplayer(function(player_obj)
-  minetest_wadsprint.reset_stamina(minetest_wadsprint.stats[player_obj:get_player_name()])
-end)
-
-minetest.register_on_leaveplayer(function(player_obj)
-    local playername = player_obj:get_player_name()
-    local player = minetest_wadsprint.stats[playername]
-    table.insert(minetest_wadsprint.offline_stats, 1, { name = playername, stamina = player.stamina})
-    minetest_wadsprint.offline_stats[playername] = { stamina = player.stamina }
-    minetest_wadsprint.stats[playername] = nil
-end)
+minetest.register_on_joinplayer(minetest_wadsprint.initialize_player)
+minetest.register_on_respawnplayer(minetest_wadsprint.reset_player)
+minetest.register_on_leaveplayer(minetest_wadsprint.deinitialize_player)
 
 -- Register hudbar call for compatibility with some hudbar mods.
 if minetest_wadsprint.register_hudbar ~= nil then
