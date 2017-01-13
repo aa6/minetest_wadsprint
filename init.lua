@@ -75,9 +75,21 @@ end
 ----------------------------------------------------------------------------------------------------
 function minetest_wadsprint.stamina_update_cycle(player)
     if player.is_sprinting then
-        minetest_wadsprint.set_stamina(player, player.stamina - (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT))
+        minetest_wadsprint.set_stamina(player, 
+            player.stamina - 
+            (
+                minetest_wadsprint.STAMINA_MAX_VALUE * 
+                minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT
+            )
+        )
     elseif player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
-        minetest_wadsprint.set_stamina(player, player.stamina + (minetest_wadsprint.STAMINA_MAX_VALUE * minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT))
+        minetest_wadsprint.set_stamina(player, 
+            player.stamina + 
+            (
+                minetest_wadsprint.STAMINA_MAX_VALUE * 
+                minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT
+            )
+        )
     end
 end
 ----------------------------------------------------------------------------------------------------
