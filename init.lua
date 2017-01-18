@@ -72,6 +72,7 @@ end
 -- Adds/subtracts stamina to player.
 --
 --  minetest_wadsprint.api.addstamina(player_name, 0.1) -- To add 10% of STAMINA_MAX_VALUE.
+--  minetest_wadsprint.api.addstamina(player_name, -0.1) -- To subtract 10% of STAMINA_MAX_VALUE.
 --
 function minetest_wadsprint.api.addstamina(player_name,stamina_rate_change)
     local player = minetest_wadsprint.stats[player_name]
@@ -91,14 +92,16 @@ function minetest_wadsprint.stamina_update_cycle(player)
                 minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT
             )
         )
-    elseif player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
-        minetest_wadsprint.set_stamina(player, 
-            player.stamina + 
-            (
-                minetest_wadsprint.STAMINA_MAX_VALUE * 
-                minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT
+    else
+        if player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
+            minetest_wadsprint.set_stamina(player, 
+                player.stamina + 
+                (
+                    minetest_wadsprint.STAMINA_MAX_VALUE * 
+                    minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT
+                )
             )
-        )
+        end
     end
 end
 ----------------------------------------------------------------------------------------------------
@@ -122,10 +125,10 @@ end
 -- Main use of this function is to put player in a state when pressing "W" would trigger the 
 -- sprinting state thus you won't need to hold "A"+"D" to keep sprinting. Also it alters player 
 -- physics to workaround lag between pressing "W" and actual sprinting. So if player is ready to 
--- sprint it is sure that his physics is already in sprinting state and he can not afraid to fall
--- while jumping from a tree to tree just because the lag between pressing "W" and sprinting state
--- would be too big. At the same time being only ready to sprint and not actually sprinting does 
--- not decreases the stamina because decreasing stamina for not sprinting is unfair.
+-- sprint he is sure that his physics is already in sprinting state and he can not afraid to fall
+-- while jumping from a tree to tree just because the lag between pressing "W" and switching to 
+-- sprinting state would be too big. At the same time being only ready to sprint but not actually 
+-- sprinting does not decreases the stamina because decreasing stamina for not sprinting is unfair.
 function minetest_wadsprint.switch_to_ready_to_sprint(player)
     if player.is_ready_to_sprint == false then
         if player.is_sprinting_physics_on == false then 
@@ -141,7 +144,8 @@ end
 ----------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------- switch_to_sprinting() --
 ----------------------------------------------------------------------------------------------------
--- Sprinting means that player is moving forward. If player isn't moving then he isn't sprinting.
+-- Sprinting means that player has altered physics and is moving forward. If player isn't moving 
+-- then he isn't sprinting.
 function minetest_wadsprint.switch_to_sprinting(player)
     if player.is_sprinting == false then
         if player.is_sprinting_physics_on == false then 
