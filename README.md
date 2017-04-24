@@ -45,6 +45,6 @@ https://github.com/aa6/minetest_wadsprint/commits/master
 
 [Minetest forums topic](https://forum.minetest.net/viewtopic.php?f=11&t=14296)
 
-**Credits:**
+**Credits**
 
 Thanks to [GunshipPenguin](https://github.com/GunshipPenguin) and his [sprint mod](https://github.com/GunshipPenguin/sprint) for showing a good example of how sprint mod for minetest can be done.
