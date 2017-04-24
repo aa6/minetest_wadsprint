@@ -53,7 +53,7 @@ end
 ----------------------------------------------------------------------------------------------------
 -- Returns/sets player stamina.
 --
---  minetest_wadsprint.api.stamina(player_name)      -- Get player stamina percentage. (1 is 100%)
+--  minetest_wadsprint.api.stamina(player_name)      -- Get player stamina percentage (1 is 100%).
 --  minetest_wadsprint.api.stamina(player_name, 0.1) -- SET stamina to 10% of STAMINA_MAX_VALUE.
 --
 function minetest_wadsprint.api.stamina(player_name, stamina_percentage)
