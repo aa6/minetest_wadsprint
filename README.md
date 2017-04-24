@@ -33,6 +33,10 @@ All dependencies are optional.
 
 - Run `bash util/git_hook_pre_commit.bash install` after repository cloning.
 
+**Changelog**
+
+https://github.com/aa6/minetest_wadsprint/commits/master
+
 **Credits:**
 
 Thanks to [GunshipPenguin](https://github.com/GunshipPenguin) and his [sprint mod](https://github.com/GunshipPenguin/sprint) for showing a good example of how sprint mod for minetest can be done.
