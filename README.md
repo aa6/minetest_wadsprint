@@ -10,6 +10,10 @@ Minetest mod for sprinting with W, A and D buttons.
 2. Then press W to start sprinting.
 3. Release A and D (keep W pressed) and continue sprinting until the stamina runs out.
 
+**How to download:**
+
+https://github.com/aa6/minetest_wadsprint/archive/master.zip
+
 **How to install:**
 
 http://wiki.minetest.com/wiki/Installing_mods
@@ -36,6 +40,10 @@ All dependencies are optional.
 **Changelog**
 
 https://github.com/aa6/minetest_wadsprint/commits/master
+
+**Links**
+
+[Minetest forum topic](https://forum.minetest.net/viewtopic.php?f=11&t=14296)
 
 **Credits:**
 
