@@ -36,6 +36,7 @@ All dependencies are optional.
 **Development**
 
 - Run `bash util/git_hook_pre_commit.bash install` after repository cloning.
+- http://dev.minetest.net/Category:Methods
 
 **Changelog**
 

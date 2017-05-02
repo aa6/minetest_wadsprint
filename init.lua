@@ -347,21 +347,27 @@ if minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE then
 end
 
 -- Main cycle.
-local timer_stats_update = 0
-local timer_controls_check = 0
+local timer_of_stats_update = 0
+local timer_of_controls_check = 0
 minetest.register_globalstep(function(dtime) -- Called every server step, usually interval of 0.05s.
-    timer_stats_update = timer_stats_update + dtime
-    timer_controls_check = timer_controls_check + dtime
-    if timer_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
-        timer_stats_update = 0
+
+    timer_of_stats_update = timer_of_stats_update + dtime
+    timer_of_controls_check = timer_of_controls_check + dtime
+
+    -- Run stamina update cycle for every player.
+    if timer_of_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
+        timer_of_stats_update = 0
         for player_name,player in pairs(minetest_wadsprint.stats) do
             minetest_wadsprint.stamina_update_cycle(player)
         end
     end
-    if timer_controls_check > minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS then
-        timer_controls_check = 0
+
+    -- Scan players controls.
+    if timer_of_controls_check > minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS then
+        timer_of_controls_check = 0
         for player_name,player in pairs(minetest_wadsprint.stats) do
             minetest_wadsprint.scan_player_controls(player)
         end
     end
+
 end)
