@@ -6,7 +6,7 @@ Minetest mod for sprinting with W, A and D buttons.
 
 **How to use**
 
-1. Press A and D simultaneously to trigger the `ready_to_sprint` event. 
+1. Press A and D simultaneously to trigger the `ready_to_sprint` state. 
 2. Then press W to start sprinting.
 3. Release A and D (keep W pressed) and continue sprinting until the stamina runs out.
 

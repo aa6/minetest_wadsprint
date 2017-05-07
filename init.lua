@@ -164,7 +164,7 @@ end
 function minetest_wadsprint.set_sprinting_physics(player,is_on)
     if player.is_sprinting_physics_on ~= is_on then
         local physics = player.obj:get_physics_override()
-        if is_on then
+        if is_on == true then
             player.obj:set_physics_override(
             {
                 jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
