@@ -23,7 +23,7 @@ minetest_wadsprint =
       --   stamina:
     },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
-    savepath = minetest.get_modpath(minetest.get_current_modname()).."/saved_players_stats.dat",
+    savepath = minetest.get_worldpath().."/mod_minetest_wadsprint_saved_players_stats.dat",
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
