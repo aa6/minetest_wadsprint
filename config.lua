@@ -1,4 +1,5 @@
 -- Common config values.
+minetest_wadsprint.HIDE_HUD_BARS                                         = true
 minetest_wadsprint.STAMINA_MAX_VALUE                                     = 100
 minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE                               = 3
 minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                            = true

@@ -1,4 +1,8 @@
-if minetest.get_modpath("hudbars") ~= nil then 
+if minetest_wadsprint.HIDE_HUD_BARS == true then
+    function minetest_wadsprint.initialize_hudbar(player) end
+    function minetest_wadsprint.hudbar_update_stamina(player) end
+    function minetest_wadsprint.hudbar_update_ready_to_sprint(player) end
+elseif minetest.get_modpath("hudbars") ~= nil then 
     -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
     function minetest_wadsprint.register_hudbar()
         -- This function registers a new custom HUD bar definition to the HUD bars mod, so it can be later used to be displayed, changed, hidden and unhidden on a per-player basis. Note this does not yet display the HUD bar.
@@ -149,14 +153,14 @@ else
             alignment = minetest_wadsprint.MINETESTHUD_ALIGNMENT,        -- `alignment`: Specifies how the item will be aligned. It ranges from -1 to 1, with 0 being the center, -1 is moved to the left/up, and 1 is to the right/down. Fractional values can be used.
         })
     end
+    function minetest_wadsprint.hudbar_update_stamina(player)
+        player.obj:hud_change(player.hud, "number", math.ceil((player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE) * minetest_wadsprint.MINETESTHUD_HALF_ICONS_NUMBER))
+    end
     function minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         if player.is_sprinting or player.is_ready_to_sprint then
           player.obj:hud_change(player.hud, "text", minetest_wadsprint.MINETESTHUD_IS_SPRINTING_ICON)
         else
           player.obj:hud_change(player.hud, "text", minetest_wadsprint.MINETESTHUD_IS_NOT_SPRINTING_ICON)
         end
-    end
-    function minetest_wadsprint.hudbar_update_stamina(player)
-        player.obj:hud_change(player.hud, "number", math.ceil((player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE) * minetest_wadsprint.MINETESTHUD_HALF_ICONS_NUMBER))
     end
 end
