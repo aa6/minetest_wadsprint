@@ -35,7 +35,7 @@ All dependencies are optional.
 
 **Development**
 
-- Run `bash util/git_hook_pre_commit.bash install` after repository cloning. To increment minor version add " 2" to `./VERSION`.
+- Run `bash util/git_hook_pre_commit.bash install` after repository cloning. To increment minor version append " 2" to `./VERSION`.
 - http://dev.minetest.net/Category:Methods
 
 **Changelog**
