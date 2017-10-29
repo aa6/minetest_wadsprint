@@ -21,6 +21,7 @@ http://wiki.minetest.com/wiki/Installing_mods
 **How to configure**
 
 Edit `config.lua` at the mod directory.
+
 Copy `config.lua` to `worlds/<worldname>/mod_minetest_wadsprint_config.lua` to create a per-world config.
 
 **Dependencies**
