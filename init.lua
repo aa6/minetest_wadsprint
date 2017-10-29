@@ -24,8 +24,12 @@ minetest_wadsprint =
     },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
     savepath = minetest.get_worldpath().."/mod_minetest_wadsprint_saved_players_stats.dat",
+    worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua") -- Load default config.
+if file_exists(minetest_wadsprint.worldconfig) then -- Load world config (if present).
+  dofile(minetest_wadsprint.worldconfig)
+end
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------- api.stats() --
