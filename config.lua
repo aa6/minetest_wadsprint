@@ -1,3 +1,5 @@
+-- Per-world config feature is available. To create per-world config,
+-- copy this file to `worlds/<worldname>/mod_minetest_wadsprint_config.lua`
 -- Common config values.
 minetest_wadsprint.HIDE_HUD_BARS                                         = false
 minetest_wadsprint.STAMINA_MAX_VALUE                                     = 100
