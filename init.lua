@@ -64,7 +64,10 @@ function minetest_wadsprint.api.stamina(player_name, stamina_percentage)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
         if stamina_value ~= nil then
-            minetest_wadsprint.set_stamina(player, minetest_wadsprint.STAMINA_MAX_VALUE * stamina_percentage)
+            minetest_wadsprint.set_stamina(
+              player, 
+              minetest_wadsprint.STAMINA_MAX_VALUE * stamina_percentage
+            )
         else
             return player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE
         end
@@ -81,7 +84,10 @@ end
 function minetest_wadsprint.api.addstamina(player_name, stamina_percentage)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
-        minetest_wadsprint.set_stamina(player, player.stamina + minetest_wadsprint.STAMINA_MAX_VALUE * stamina_percentage)
+        minetest_wadsprint.set_stamina(
+          player, 
+          player.stamina + minetest_wadsprint.STAMINA_MAX_VALUE * stamina_percentage
+        )
     end  
 end
 ----------------------------------------------------------------------------------------------------
