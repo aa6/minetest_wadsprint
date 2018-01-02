@@ -28,6 +28,7 @@ minetest_wadsprint =
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua") -- Load default config.
 if file_exists(minetest_wadsprint.worldconfig) then -- Load world config (if present).
+  print("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
   dofile(minetest_wadsprint.worldconfig)
 end
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
