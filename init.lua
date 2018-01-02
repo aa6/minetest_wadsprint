@@ -233,20 +233,18 @@ function minetest_wadsprint.set_stamina(player,stamina_value)
     if old_stamina_value >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE 
     and player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
         minetest_wadsprint.api.events:emit(
-            "dyspnea",
+            "dyspnea-on",
             {
-                name = "dyspnea",
-                value = true,
+                name = "dyspnea-on",
                 player = player,
             }
         )
     elseif old_stamina_value < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE 
     and player.stamina >= minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
         minetest_wadsprint.api.events:emit(
-            "dyspnea",
+            "dyspnea-off",
             {
-                name = "dyspnea",
-                value = false,
+                name = "dyspnea-off",
                 player = player,
             }
         )
@@ -275,10 +273,9 @@ function minetest_wadsprint.initialize_player(player_obj)
     minetest_wadsprint.initialize_hudbar(player)
     if player.stamina < minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
         minetest_wadsprint.api.events:emit(
-            "dyspnea",
+            "dyspnea-on",
             {
-                name = "dyspnea",
-                value = true,
+                name = "dyspnea-on",
                 player = player,
             }
         )
