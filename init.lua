@@ -8,28 +8,32 @@ minetest_wadsprint =
     api = { events = EventEmitter:new() },
     stats = -- Online players' stats.
     {
-      -- <playername>:
-      --   obj: <player object>
-      --   name: <playername>
-      --   stamina:
-      --   is_walking:
-      --   is_sprinting:
-      --   is_ready_to_sprint:
-      --   is_sprinting_physics_on:
+      --  <playername string>:
+      --      obj:                      <player object>
+      --      name:                     <playername string>
+      --      stamina:                  <float>
+      --      is_walking:               <boolean>
+      --      is_sprinting:             <boolean>
+      --      is_ready_to_sprint:       <boolean>
+      --      is_sprinting_physics_on:  <boolean>
     },
     offline_stats = -- Offline stats aren't processed in the main cycle.
     {
-      -- <playername>:
-      --   stamina:
+      --  <playername string>:
+      --      stamina:                  <float>
     },
     version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
     savepath = minetest.get_worldpath().."/mod_minetest_wadsprint_saved_players_stats.dat",
     worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua") -- Load default config.
-if file_exists(minetest_wadsprint.worldconfig) then -- Load world config (if present).
+if file_exists(minetest_wadsprint.worldconfig) then -- Load world-specific config (if present).
   print("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
   dofile(minetest_wadsprint.worldconfig)
+else
+  print("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
+  io.open(minetest_wadsprint.worldconfig,"w") -- Create empty world config (for user's convenience).
+      :write("-- World-specific config. Copy here values from `mods/minetest_wadsprint/config.lua`:\n")
 end
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 ----------------------------------------------------------------------------------------------------
