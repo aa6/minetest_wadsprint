@@ -1,17 +1,17 @@
 -- World-specific configs are available. To create world-specific config,
 -- copy this file to `worlds/<worldname>/mod_minetest_wadsprint_config.lua`
 -- Common config values.
-minetest_wadsprint.HIDE_HUD_BARS                                         = false
-minetest_wadsprint.STAMINA_MAX_VALUE                                     = 100
-minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE                               = 3
-minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                            = true
-minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS                      = 1000
-minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS                    = 1
-minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS                  = 0.1
-minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT                     = 3.8
-minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT               = 1.2
-minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.0005 -- 0.1 means 10% decrease
-minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = 0.0001 -- 0.1 means 10% increase
+minetest_wadsprint.HIDE_HUD_BARS                               = false
+minetest_wadsprint.STAMINA_MAX_VALUE                           = 100
+minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE                     = 3
+minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                  = true
+minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS            = 1000
+minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS          = 1
+minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS        = 0.1
+minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT           = 3.8
+minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT     = 1.2
+minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS = 0.05 -- % decrease
+minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS = 0.01 -- % increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).
 -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
 minetest_wadsprint.HUDBARS_IDENTIFIER                      = "sprint"

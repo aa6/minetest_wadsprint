@@ -35,6 +35,16 @@ else
   io.open(minetest_wadsprint.worldconfig,"w") -- Create empty world config (for user's convenience).
       :write("-- World-specific config. Copy here values from `mods/minetest_wadsprint/config.lua`:\n")
 end
+-- Calculating decrease and increase rates per period, based on that of seconds.
+minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = (
+  minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
+  ( minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS / 100 )
+)
+minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = (
+  minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
+  ( minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS / 100 )
+)
+-- Initializing HUD bars.
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------- api.stats() --
@@ -46,7 +56,7 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua"
 function minetest_wadsprint.api.stats(player_name)
     local player = minetest_wadsprint.stats[player_name]
     if player ~= nil then
-        return -- Return copy of values to be sure that they won't be changed directly by accident.
+        return -- Return copy of values to be sure that they won't be changed by accident.
             {
                 name = player_name,
                 stamina = player.stamina,
@@ -60,7 +70,7 @@ end
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------- api.stamina() --
 ----------------------------------------------------------------------------------------------------
--- Returns/sets player stamina.
+-- Gets/sets player stamina.
 --
 --  minetest_wadsprint.api.stamina(player_name)      -- Get player stamina percentage (1 is 100%).
 --  minetest_wadsprint.api.stamina(player_name, 0.1) -- SET stamina to 10% of STAMINA_MAX_VALUE.
