@@ -1,3 +1,6 @@
+-- Loading global config.
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
+
 -- Processing in-game settings. In-game settings are preferrable
 -- over global config.lua values.
 function minetest_wadsprint.load_minetest_settings_key(key,type)
