@@ -8,8 +8,8 @@ minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                  = true
 minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS            = 1000
 minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS          = 1
 minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS        = 0.1
-minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT           = 3.8
-minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT     = 1.2
+minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_PERCENTS             = 380
+minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_PERCENTS           = 120
 minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS = 0.05 -- % decrease
 minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS = 0.01 -- % increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).

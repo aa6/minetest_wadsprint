@@ -1,0 +1,35 @@
+# If this options is disabled, no other settings option will have effect over default global config values. In contrary, world-specific config values will be still preferred over this in-game settings.
+minetest_wadsprint.ENABLE_INGAME_SETTINGS (ENABLE ALL THE MOD SETTINGS BELOW) bool false
+
+# If enabled, stamina HUD bar will not be shown.
+minetest_wadsprint.HIDE_HUD_BARS (Hide HUD bars) bool false
+
+# Absolutely arbitrary value to make calculations more convenient.
+minetest_wadsprint.STAMINA_MAX_VALUE (Stamina max value in points) int 100
+
+# Stamina minimum level when running will not be possible. 
+minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE (Dyspnea threshold value in points) int 3
+
+# Saves stats to a special file in a world directory. If disabled, players will be able to reset their stamina to maximum by leaving and immediately joining a game.
+minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE (Save players stats to file on disconnect) bool true
+
+# Stats file limit to prevent HDD overflow or large file reading lag when player joins.
+minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS (Stats save file records max limit) int 1000
+
+# In-game cycle interval of players' stamina recalculation.
+minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS (Player in-game stats update cycle period in seconds) float 1
+
+# In-game cycle interval of reading players' controls.
+minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS (Player in-game controls check cycle period in seconds) float 0.1
+
+# Running boost coefficient.
+minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_PERCENTS (Sprint run speed boost percent %) float 380
+
+# Jumping boost coefficient.
+minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_PERCENTS (Sprint jump height boost percent %) float 120
+
+# Calculated in percents % off STAMINA_MAX_VALUE.
+minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS (Stamina decrease percent % per second when running) float 0.05
+
+# Calculated in percents % off STAMINA_MAX_VALUE.
+minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS (Stamina increase percent % per second when not running) float 0.01

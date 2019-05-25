@@ -3,6 +3,8 @@
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_savetable.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_exists.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_get_contents.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_put_contents.lua")
 minetest_wadsprint = 
 {
     api = { events = EventEmitter:new() },
@@ -22,29 +24,12 @@ minetest_wadsprint =
       --  <playername string>:
       --      stamina:                  <float>
     },
-    version = io.open(minetest.get_modpath(minetest.get_current_modname()).."/VERSION","r"):read("*all"),
+    version = file_get_contents(minetest.get_modpath(minetest.get_current_modname()).."/VERSION"),
     savepath = minetest.get_worldpath().."/mod_minetest_wadsprint_saved_players_stats.dat",
     worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua") -- Load default config.
-if file_exists(minetest_wadsprint.worldconfig) then -- Load world-specific config (if present).
-  print("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
-  dofile(minetest_wadsprint.worldconfig)
-else
-  print("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
-  io.open(minetest_wadsprint.worldconfig,"w") -- Create empty world config (for user's convenience).
-      :write("-- World-specific config. Copy here values from `mods/minetest_wadsprint/config.lua`:\n")
-end
--- Calculating decrease and increase rates per period, based on that of seconds.
-minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = (
-  minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
-  ( minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS / 100 )
-)
-minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = (
-  minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
-  ( minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS / 100 )
-)
--- Initializing HUD bars.
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------- api.stats() --
@@ -192,15 +177,15 @@ function minetest_wadsprint.set_sprinting_physics(player,is_on)
         if is_on == true then
             player.obj:set_physics_override(
             {
-                jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
-                speed = physics.speed - 1 + minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
+                jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT,
+                speed = physics.speed - 1 + minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT,
             })
         else
             if player.is_sprinting_physics_on ~= nil then
                 player.obj:set_physics_override(
                 {
-                    jump = physics.jump + 1 - minetest_wadsprint.SPRINT_JUMP_HEIGHT_MODIFIER_COEFFICIENT,
-                    speed = physics.speed + 1 - minetest_wadsprint.SPRINT_SPEED_MODIFIER_COEFFICIENT,
+                    jump = physics.jump + 1 - minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT,
+                    speed = physics.speed + 1 - minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT,
                 })
             end
         end
