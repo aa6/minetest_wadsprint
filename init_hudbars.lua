@@ -1,8 +1,11 @@
 if minetest_wadsprint.HIDE_HUD_BARS == true then
+
     function minetest_wadsprint.initialize_hudbar(player) end
     function minetest_wadsprint.hudbar_update_stamina(player) end
     function minetest_wadsprint.hudbar_update_ready_to_sprint(player) end
+
 elseif minetest.get_modpath("hudbars") ~= nil then 
+
     -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
     function minetest_wadsprint.register_hudbar()
         -- This function registers a new custom HUD bar definition to the HUD bars mod, so it can be later used to be displayed, changed, hidden and unhidden on a per-player basis. Note this does not yet display the HUD bar.
@@ -81,7 +84,9 @@ elseif minetest.get_modpath("hudbars") ~= nil then
             minetest_wadsprint.STAMINA_MAX_VALUE   -- `new_max_value`: The new maximum value of the HUD bar
         )
     end
+
 elseif minetest.get_modpath("hud") ~= nil then 
+
     -- @see https://github.com/BlockMen/hud_hunger/blob/master/API.txt
     function minetest_wadsprint.register_hudbar()
         hud.register(
@@ -139,7 +144,9 @@ elseif minetest.get_modpath("hud") ~= nil then
             }
         )
     end
+
 else
+
     -- @see http://dev.minetest.net/HUD
     function minetest_wadsprint.initialize_hudbar(player)
         player.hud = player.obj:hud_add(
@@ -163,4 +170,5 @@ else
           player.obj:hud_change(player.hud, "text", minetest_wadsprint.MINETESTHUD_IS_NOT_SPRINTING_ICON)
         end
     end
+    
 end
