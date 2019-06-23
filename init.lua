@@ -1,5 +1,6 @@
 -- WAD SPRINTING minetest (https://minetest.net) mod (https://dev.minetest.net/Intro)
 -- @link https://github.com/aa6/minetest_wadsprint
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_round.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_savetable.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_exists.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.lua")
@@ -170,27 +171,7 @@ end
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------- set_sprinting_physics() --
 ----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.set_sprinting_physics(player,is_on)
-    if player.is_sprinting_physics_on ~= is_on then
-        local physics = player.obj:get_physics_override()
-        if is_on == true then
-            player.obj:set_physics_override(
-            {
-                jump = physics.jump - 1 + minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT,
-                speed = physics.speed - 1 + minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT,
-            })
-        else
-            if player.is_sprinting_physics_on ~= nil then
-                player.obj:set_physics_override(
-                {
-                    jump = physics.jump + 1 - minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT,
-                    speed = physics.speed + 1 - minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT,
-                })
-            end
-        end
-        player.is_sprinting_physics_on = is_on
-    end
-end
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_set_sprinting_physics.lua")
 ----------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------- scan_player_controls() --
 ----------------------------------------------------------------------------------------------------

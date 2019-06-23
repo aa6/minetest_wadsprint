@@ -4,6 +4,7 @@
 minetest_wadsprint.HIDE_HUD_BARS                               = false
 minetest_wadsprint.STAMINA_MAX_VALUE                           = 100
 minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE                     = 3
+minetest_wadsprint.BAD_PHYSICS_OVERRIDE_MODE                   = false
 minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                  = true
 minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS            = 1000
 minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS          = 1
