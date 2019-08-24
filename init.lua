@@ -1,14 +1,13 @@
 -- WAD SPRINTING minetest (https://minetest.net) mod (https://dev.minetest.net/Intro)
 -- @link https://github.com/aa6/minetest_wadsprint
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_round.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_savetable.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_exists.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_eventemitter.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_get_contents.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib_file_put_contents.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib.round.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib.savetable.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib.file_exists.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib.eventemitter.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib.file_get_contents.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/lib.file_put_contents.lua")
 minetest_wadsprint = 
 {
-    api = { events = EventEmitter:new() },
     stats = -- Online players' stats.
     {
       --  <playername string>:
@@ -29,66 +28,34 @@ minetest_wadsprint =
     savepath = minetest.get_worldpath().."/mod_minetest_wadsprint_saved_players_stats.dat",
     worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_config.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_hudbars.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.api.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.config.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.hudbars.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.set_sprinting_physics.lua")
 ----------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------- api.stats() --
+-------------------------------------------------------------------------- scan_player_controls() --
 ----------------------------------------------------------------------------------------------------
--- Returns player stats.
---
---  minetest_wadsprint.api.stats(player_name) -- Get player stats.
---
-function minetest_wadsprint.api.stats(player_name)
-    local player = minetest_wadsprint.stats[player_name]
-    if player ~= nil then
-        return -- Return copy of values to be sure that they won't be changed by accident.
-            {
-                name = player_name,
-                stamina = player.stamina,
-                is_walking = player.is_walking,
-                is_sprinting = player.is_sprinting,
-                is_ready_to_sprint = player.is_ready_to_sprint,
-                is_sprinting_physics_on = player.is_sprinting_physics_on,
-            }
-    end
-end
-----------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------ api.stamina() --
-----------------------------------------------------------------------------------------------------
--- Gets/sets player stamina.
---
---  minetest_wadsprint.api.stamina(player_name)      -- Get player stamina percentage (1 is 100%).
---  minetest_wadsprint.api.stamina(player_name, 0.1) -- SET stamina to 10% of STAMINA_MAX_VALUE.
---
-function minetest_wadsprint.api.stamina(player_name, stamina_percentage)
-    local player = minetest_wadsprint.stats[player_name]
-    if player ~= nil then
-        if stamina_value ~= nil then
-            minetest_wadsprint.set_stamina(
-              player, 
-              minetest_wadsprint.STAMINA_MAX_VALUE * stamina_percentage
-            )
-        else
-            return player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE
+function minetest_wadsprint.scan_player_controls(player)
+    local controls = player.obj:get_player_control()
+    if controls["up"] then 
+        if player.is_sprinting then
+            return
+        elseif player.is_ready_to_sprint then
+            minetest_wadsprint.switch_to_sprinting(player)
+            return
         end
-    end  
-end
-----------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------- api.addstamina() --
-----------------------------------------------------------------------------------------------------
--- Adds/subtracts stamina to player.
---
---  minetest_wadsprint.api.addstamina(player_name, 0.1)  -- Add 10% of STAMINA_MAX_VALUE.
---  minetest_wadsprint.api.addstamina(player_name, -0.1) -- Subtract 10% of STAMINA_MAX_VALUE.
---
-function minetest_wadsprint.api.addstamina(player_name, stamina_percentage)
-    local player = minetest_wadsprint.stats[player_name]
-    if player ~= nil then
-        minetest_wadsprint.set_stamina(
-          player, 
-          player.stamina + minetest_wadsprint.STAMINA_MAX_VALUE * stamina_percentage
-        )
-    end  
+    end
+    if controls["left"] and controls["right"] and not controls["down"] then
+        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
+            if controls["up"] then
+                minetest_wadsprint.switch_to_sprinting(player)
+            else
+                minetest_wadsprint.switch_to_ready_to_sprint(player)
+            end
+        end
+    else
+        minetest_wadsprint.switch_to_walking(player)
+    end
 end
 ----------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------- stamina_update_cycle_tick() --
@@ -161,35 +128,6 @@ function minetest_wadsprint.switch_to_ready_to_sprint(player)
     end
 end
 ----------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------- set_sprinting_physics() --
-----------------------------------------------------------------------------------------------------
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init_set_sprinting_physics.lua")
-----------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------- scan_player_controls() --
-----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.scan_player_controls(player)
-    local control = player.obj:get_player_control()
-    if control["up"] then 
-        if player.is_sprinting then
-            return
-        elseif player.is_ready_to_sprint then
-            minetest_wadsprint.switch_to_sprinting(player)
-            return
-        end
-    end
-    if control["left"] and control["right"] and not control["down"] then
-        if player.stamina > minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE then
-            if control["up"] then
-                minetest_wadsprint.switch_to_sprinting(player)
-            else
-                minetest_wadsprint.switch_to_ready_to_sprint(player)
-            end
-        end
-    else
-        minetest_wadsprint.switch_to_walking(player)
-    end
-end
-----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------- set_stamina() --
 ----------------------------------------------------------------------------------------------------
 function minetest_wadsprint.set_stamina(player,stamina_value)
@@ -254,9 +192,9 @@ function minetest_wadsprint.initialize_player(player_obj)
     end
 end
 ----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------- reset_player() --
+---------------------------------------------------------------------------- reset_player_stats() --
 ----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.reset_player(player_obj)
+function minetest_wadsprint.reset_player_stats(player_obj)
     local player = minetest_wadsprint.stats[player_obj:get_player_name()]
     minetest_wadsprint.set_stamina(player,minetest_wadsprint.STAMINA_MAX_VALUE)
     minetest_wadsprint.switch_to_walking(player)
@@ -311,7 +249,7 @@ end
 ------------------------------------------------------------------------------ Mod initialization --
 ----------------------------------------------------------------------------------------------------
 minetest.register_on_joinplayer(minetest_wadsprint.initialize_player)
-minetest.register_on_respawnplayer(minetest_wadsprint.reset_player)
+minetest.register_on_respawnplayer(minetest_wadsprint.reset_player_stats)
 minetest.register_on_leaveplayer(minetest_wadsprint.deinitialize_player)
 
 -- Register hudbar call for compatibility with some hudbar mods.
