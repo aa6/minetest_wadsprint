@@ -39,10 +39,15 @@ if file_exists(minetest_wadsprint.worldconfig) then
   dofile(minetest_wadsprint.worldconfig)
 else
   print("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
-  file_put_contents(
-    minetest_wadsprint.worldconfig,
-    "-- World-specific config. Copy here values from `mods/minetest_wadsprint/config.lua`:\n"
-  )
+  local new_world_config_contents = 
+    "-- World-specific config. Values are taken from `mods/minetest_wadsprint/config.lua`:\n"..
+    "-- Please uncomment lines of your need and set the desired value.\n"
+  for line in string.gmatch(file_get_contents(minetest.get_modpath(minetest.get_current_modname()).."/config.lua"), "[^\r\n]+") do
+    if string.sub(line,0,19) == "minetest_wadsprint." then
+      new_world_config_contents = new_world_config_contents.."-- "..line.."\n"
+    end
+  end
+  file_put_contents(minetest_wadsprint.worldconfig,new_world_config_contents)
 end
 
 -- Processing some config values to avoid further unnecessary calculations.
