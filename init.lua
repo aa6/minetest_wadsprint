@@ -91,12 +91,11 @@ function minetest_wadsprint.api.addstamina(player_name, stamina_percentage)
     end  
 end
 ----------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------- stamina_update_cycle() --
+--------------------------------------------------------------------- stamina_update_cycle_tick() --
 ----------------------------------------------------------------------------------------------------
-function minetest_wadsprint.stamina_update_cycle(player)
+function minetest_wadsprint.stamina_update_cycle_tick(player)
     if player.is_sprinting then
-        minetest_wadsprint.set_stamina(player, 
-            player.stamina - 
+        minetest_wadsprint.set_stamina(player, player.stamina - 
             (
                 minetest_wadsprint.STAMINA_MAX_VALUE * 
                 minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT
@@ -104,8 +103,7 @@ function minetest_wadsprint.stamina_update_cycle(player)
         )
     else
         if player.stamina < minetest_wadsprint.STAMINA_MAX_VALUE then
-            minetest_wadsprint.set_stamina(player, 
-                player.stamina + 
+            minetest_wadsprint.set_stamina(player, player.stamina + 
                 (
                     minetest_wadsprint.STAMINA_MAX_VALUE * 
                     minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT
@@ -119,12 +117,10 @@ end
 ----------------------------------------------------------------------------------------------------
 function minetest_wadsprint.switch_to_walking(player)
     if player.is_walking == false then
-        if player.is_sprinting_physics_on == true then 
-            minetest_wadsprint.set_sprinting_physics(player,false)
-        end
         player.is_walking = true
         player.is_sprinting = false
         player.is_ready_to_sprint = false
+        minetest_wadsprint.set_sprinting_physics(player,false)
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         minetest_wadsprint.hudbar_update_stamina(player)
     end
@@ -141,12 +137,10 @@ end
 -- sprinting does not decreases the stamina because decreasing stamina for not sprinting is unfair.
 function minetest_wadsprint.switch_to_ready_to_sprint(player)
     if player.is_ready_to_sprint == false then
-        if player.is_sprinting_physics_on == false then 
-            minetest_wadsprint.set_sprinting_physics(player,true)
-        end
         player.is_walking = false
         player.is_sprinting = false
         player.is_ready_to_sprint = true
+        minetest_wadsprint.set_sprinting_physics(player,true)
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         minetest_wadsprint.hudbar_update_stamina(player)
     end
@@ -158,12 +152,10 @@ end
 -- then he isn't sprinting.
 function minetest_wadsprint.switch_to_sprinting(player)
     if player.is_sprinting == false then
-        if player.is_sprinting_physics_on == false then 
-            minetest_wadsprint.set_sprinting_physics(player,true)
-        end
         player.is_walking = false
         player.is_sprinting = true
         player.is_ready_to_sprint = false
+        minetest_wadsprint.set_sprinting_physics(player,true)
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         minetest_wadsprint.hudbar_update_stamina(player)
     end
@@ -345,7 +337,7 @@ minetest.register_globalstep(function(dtime) -- Called every server step, usuall
     if timer_of_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
         timer_of_stats_update = 0
         for player_name,player in pairs(minetest_wadsprint.stats) do
-            minetest_wadsprint.stamina_update_cycle(player)
+            minetest_wadsprint.stamina_update_cycle_tick(player)
         end
     end
 
