@@ -7,6 +7,7 @@ case $1 in
     chmod +x $SCRIPT_DIRECTORY/git_hook_pre_commit.bash
     ;;
   "execute")
+    git add -u
     source util/increment_version.bash
     VERSION=`cat VERSION`
     VERSION=`increment_version $VERSION`
