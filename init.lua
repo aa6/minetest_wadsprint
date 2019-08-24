@@ -126,6 +126,21 @@ function minetest_wadsprint.switch_to_walking(player)
     end
 end
 ----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------- switch_to_sprinting() --
+----------------------------------------------------------------------------------------------------
+-- Sprinting means that player has altered physics and is moving forward. If player isn't moving 
+-- then he isn't sprinting.
+function minetest_wadsprint.switch_to_sprinting(player)
+    if player.is_sprinting == false then
+        player.is_walking = false
+        player.is_sprinting = true
+        player.is_ready_to_sprint = false
+        minetest_wadsprint.set_sprinting_physics(player,true)
+        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
+        minetest_wadsprint.hudbar_update_stamina(player)
+    end
+end
+----------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------- switch_to_ready_to_sprint() --
 ----------------------------------------------------------------------------------------------------
 -- Main use of this function is to put player in a state when pressing "W" would trigger the 
@@ -140,21 +155,6 @@ function minetest_wadsprint.switch_to_ready_to_sprint(player)
         player.is_walking = false
         player.is_sprinting = false
         player.is_ready_to_sprint = true
-        minetest_wadsprint.set_sprinting_physics(player,true)
-        minetest_wadsprint.hudbar_update_ready_to_sprint(player)
-        minetest_wadsprint.hudbar_update_stamina(player)
-    end
-end
-----------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------- switch_to_sprinting() --
-----------------------------------------------------------------------------------------------------
--- Sprinting means that player has altered physics and is moving forward. If player isn't moving 
--- then he isn't sprinting.
-function minetest_wadsprint.switch_to_sprinting(player)
-    if player.is_sprinting == false then
-        player.is_walking = false
-        player.is_sprinting = true
-        player.is_ready_to_sprint = false
         minetest_wadsprint.set_sprinting_physics(player,true)
         minetest_wadsprint.hudbar_update_ready_to_sprint(player)
         minetest_wadsprint.hudbar_update_stamina(player)

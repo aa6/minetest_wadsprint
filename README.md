@@ -26,10 +26,11 @@ Copy `config.lua` to `worlds/<worldname>/mod_minetest_wadsprint_config.lua` to c
 
 **Dependencies**
 
-All dependencies are optional.
+All mod dependencies are optional.
 
-- [hudbars?](http://repo.or.cz/minetest_hudbars.git)
 - [hud?](https://github.com/BlockMen/hud_hunger)
+- [hudbars?](http://repo.or.cz/minetest_hudbars.git)
+- [player_monoids?](https://github.com/minetest-mods/player_monoids)
 
 **Dependents**
 
