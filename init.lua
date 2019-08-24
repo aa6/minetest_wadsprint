@@ -328,10 +328,10 @@ end
 -- Main cycle.
 local timer_of_stats_update = 0
 local timer_of_controls_check = 0
-minetest.register_globalstep(function(dtime) -- Called every server step, usually interval of 0.05s.
+minetest.register_globalstep(function(seconds_since_last_global_step) -- Called every server step, usually interval of 0.05s.
 
-    timer_of_stats_update = timer_of_stats_update + dtime
-    timer_of_controls_check = timer_of_controls_check + dtime
+    timer_of_stats_update = timer_of_stats_update + seconds_since_last_global_step
+    timer_of_controls_check = timer_of_controls_check + seconds_since_last_global_step
 
     -- Run stamina update cycle for every player.
     if timer_of_stats_update > minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS then
