@@ -29,6 +29,7 @@ minetest_wadsprint =
     worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.api.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.legacy.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.hudbars.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.set_sprinting_physics.lua")

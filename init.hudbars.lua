@@ -6,6 +6,7 @@ if minetest_wadsprint.HIDE_HUD_BARS == true then
 
 elseif minetest.get_modpath("hudbars") ~= nil then 
 
+    minetest.legacy_hudbars_below_2_0_0()
     -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
     function minetest_wadsprint.register_hudbar()
         -- This function registers a new custom HUD bar definition to the HUD bars mod, so it can be later used to be displayed, changed, hidden and unhidden on a per-player basis. Note this does not yet display the HUD bar.
@@ -22,7 +23,7 @@ elseif minetest.get_modpath("hudbars") ~= nil then
             minetest_wadsprint.STAMINA_MAX_VALUE,  -- `default_start_value`: If this HUD bar is added to a player, and no initial value is specified, this value will be used as initial current value.
             minetest_wadsprint.STAMINA_MAX_VALUE,  -- `default_max_value`: If this HUD bar is added to a player, and no initial maximum value is specified, this value will be used as initial maximum value.
             false,                                 -- `default_start_hidden`: The HUD bar will be initially start hidden by default when added to a player. Use `hb.unhide_hudbar` to unhide it.
-            minetest_wadsprint.HUDBARS_TEXT_FORMAT -- `format_string`: This is optional; You can specify an alternative format string display the final text on the HUD bar. The default format string is “`%s: %d/%d`” (in this order: Label, current value, maximum value). See also the Lua documentation of `string.format`.
+            minetest_wadsprint.HUDBARS_2_0_0_TEXT_FORMAT -- `format_string`: This is optional; You can specify an alternative format string display the final text on the HUD bar. The default format string is “`%s: %d/%d`” (in this order: Label, current value, maximum value). See also the Lua documentation of `string.format`.
         )
     end
     function minetest_wadsprint.initialize_hudbar(player)

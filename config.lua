@@ -15,6 +15,7 @@ minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS = 0.05 -- % decre
 minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS = 0.01 -- % increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).
 -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
+minetest_wadsprint.HUDBARS_2_0_0_TEXT_FORMAT               = "@1: @2/@3" -- For hubars 2.0.0 and upper versions.
 minetest_wadsprint.HUDBARS_IDENTIFIER                      = "sprint"
 minetest_wadsprint.HUDBARS_TEXT_COLOR                      = 0xFFFFFF
 minetest_wadsprint.HUDBARS_TEXT_LABEL                      = "Stamina"
