@@ -21,11 +21,13 @@ if minetest_wadsprint.BAD_PHYSICS_OVERRIDE_MODE == true then
     end
 
 elseif minetest.get_modpath("player_monoids") ~= nil then 
-    minetest.register_on_joinplayer(function(player_obj)
-      minetest_wadsprint.stats[player_obj:get_player_name()].monoids = {}
-      minetest_wadsprint.stats[player_obj:get_player_name()].monoids.jump = {}
-      minetest_wadsprint.stats[player_obj:get_player_name()].monoids.speed = {}
-    end)
+    local default_minetest_wadsprint_initialize_player = minetest_wadsprint.initialize_player
+    function minetest_wadsprint.initialize_player(player_obj)
+        default_minetest_wadsprint_initialize_player(player_obj)
+        minetest_wadsprint.stats[player_obj:get_player_name()].monoids = {}
+        minetest_wadsprint.stats[player_obj:get_player_name()].monoids.jump = {}
+        minetest_wadsprint.stats[player_obj:get_player_name()].monoids.speed = {}
+    end
     function minetest_wadsprint.set_sprinting_physics(player,is_on_val)
         if player.is_sprinting_physics_on ~= is_on_val then
             if is_on_val == true then
