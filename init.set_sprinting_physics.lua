@@ -32,27 +32,27 @@ elseif minetest.get_modpath("player_monoids") ~= nil then
         if player.is_sprinting_physics_on ~= is_on_val then
             if is_on_val == true then
                 table.insert(
-                  player.monoids.jump,
-                  player_monoids.jump:add_change(
-                      player.obj, 
-                      minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT, 
-                      "minetest_wadsprint:jump"
-                  )
+                    player.monoids.jump,
+                    player_monoids.jump:add_change(
+                        player.obj, 
+                        minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT, 
+                        "minetest_wadsprint:jump"
+                    )
                 )
                 table.insert(
-                  player.monoids.speed,
-                  player_monoids.speed:add_change(
-                      player.obj, 
-                      minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT, 
-                      "minetest_wadsprint:speed"
-                  )
+                    player.monoids.speed,
+                    player_monoids.speed:add_change(
+                        player.obj, 
+                        minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT, 
+                        "minetest_wadsprint:speed"
+                    )
                 )
             elseif player.is_sprinting_physics_on ~= nil then
                 while #player.monoids.jump ~= 0 do
-                  player_monoids.jump:del_change(player.obj, table.remove(player.monoids.jump))
+                    player_monoids.jump:del_change(player.obj, table.remove(player.monoids.jump))
                 end
                 while #player.monoids.speed ~= 0 do
-                  player_monoids.speed:del_change(player.obj, table.remove(player.monoids.speed))
+                    player_monoids.speed:del_change(player.obj, table.remove(player.monoids.speed))
                 end
             end
             player.is_sprinting_physics_on = is_on_val
