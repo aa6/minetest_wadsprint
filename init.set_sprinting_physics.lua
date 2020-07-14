@@ -21,6 +21,7 @@ if minetest_wadsprint.BAD_PHYSICS_OVERRIDE_MODE == true then
     end
 
 elseif minetest.get_modpath("player_monoids") ~= nil then 
+
     local default_minetest_wadsprint_initialize_player = minetest_wadsprint.initialize_player
     function minetest_wadsprint.initialize_player(player_obj)
         default_minetest_wadsprint_initialize_player(player_obj)
