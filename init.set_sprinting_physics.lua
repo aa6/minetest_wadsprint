@@ -21,23 +21,37 @@ if minetest_wadsprint.BAD_PHYSICS_OVERRIDE_MODE == true then
     end
 
 elseif minetest.get_modpath("player_monoids") ~= nil then 
-
+    minetest.register_on_joinplayer(function(player_obj)
+      minetest_wadsprint.stats[player_obj:get_player_name()].monoids = {}
+      minetest_wadsprint.stats[player_obj:get_player_name()].monoids.jump = {}
+      minetest_wadsprint.stats[player_obj:get_player_name()].monoids.speed = {}
+    end)
     function minetest_wadsprint.set_sprinting_physics(player,is_on_val)
         if player.is_sprinting_physics_on ~= is_on_val then
             if is_on_val == true then
-                player_monoids.jump:add_change(
-                    player.obj, 
-                    minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT, 
-                    "minetest_wadsprint:jump"
+                table.insert(
+                  player.monoids.jump,
+                  player_monoids.jump:add_change(
+                      player.obj, 
+                      minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT, 
+                      "minetest_wadsprint:jump"
+                  )
                 )
-                player_monoids.speed:add_change(
-                    player.obj, 
-                    minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT, 
-                    "minetest_wadsprint:speed"
+                table.insert(
+                  player.monoids.speed,
+                  player_monoids.speed:add_change(
+                      player.obj, 
+                      minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT, 
+                      "minetest_wadsprint:speed"
+                  )
                 )
             elseif player.is_sprinting_physics_on ~= nil then
-                player_monoids.jump:del_change(player.obj, "minetest_wadsprint:jump")
-                player_monoids.speed:del_change(player.obj, "minetest_wadsprint:speed")
+                while #player.monoids.jump ~= 0 do
+                  player_monoids.jump:del_change(player.obj, table.remove(player.monoids.jump))
+                end
+                while #player.monoids.speed ~= 0 do
+                  player_monoids.speed:del_change(player.obj, table.remove(player.monoids.speed))
+                end
             end
             player.is_sprinting_physics_on = is_on_val
         end
