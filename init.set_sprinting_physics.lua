@@ -36,16 +36,14 @@ elseif minetest.get_modpath("player_monoids") ~= nil then
                     player.monoids.jump,
                     player_monoids.jump:add_change(
                         player.obj, 
-                        minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT, 
-                        "minetest_wadsprint:jump"
+                        minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT
                     )
                 )
                 table.insert(
                     player.monoids.speed,
                     player_monoids.speed:add_change(
                         player.obj, 
-                        minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT, 
-                        "minetest_wadsprint:speed"
+                        minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT
                     )
                 )
             elseif player.is_sprinting_physics_on ~= nil then
