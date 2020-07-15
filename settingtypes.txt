@@ -4,9 +4,6 @@ minetest_wadsprint.ENABLE_INGAME_SETTINGS (ENABLE ALL THE MOD SETTINGS BELOW) bo
 # If enabled, stamina HUD bar will not be shown.
 minetest_wadsprint.HIDE_HUD_BARS (Hide HUD bars) bool false
 
-# Can be used to establish compatibility with mods that don't support proper physics change or monoids. Strongly not recommended in other cases.
-minetest_wadsprint.BAD_PHYSICS_OVERRIDE_MODE (Bad physics override mode) bool false
-
 # Absolutely arbitrary value to make calculations more convenient.
 minetest_wadsprint.STAMINA_MAX_VALUE (Stamina max value in points) int 100
 
