@@ -10,8 +10,8 @@ minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS          = 1
 minetest_wadsprint.PLAYER_CONTROLS_CHECK_PERIOD_SECONDS        = 0.1
 minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_PERCENTS             = 380
 minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_PERCENTS           = 120
-minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS = 0.25 -- % decrease
-minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS = 0.05 -- % increase
+minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS = 0.5 -- % decrease
+minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS = 0.1 -- % increase
 -- Config values for `hudbars` mod (totally optional, applied only if installed).
 -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
 minetest_wadsprint.HUDBARS_2_0_0_TEXT_FORMAT               = "@1: @2/@3" -- For hubars 2.0.0 and upper versions.
