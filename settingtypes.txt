@@ -1,5 +1,5 @@
 # If this options is disabled, no other settings option will have effect over default global config values. In contrary, world-specific config values will be still preferred over this in-game settings.
-minetest_wadsprint.ENABLE_INGAME_SETTINGS (ENABLE ALL THE MOD SETTINGS BELOW) bool false
+minetest_wadsprint.ENABLE_INGAME_SETTINGS (ENABLE ALL THE MOD SETTINGS BELOW) bool true
 
 # If enabled, stamina HUD bar will not be shown.
 minetest_wadsprint.HIDE_HUD_BARS (Hide HUD bars) bool false
