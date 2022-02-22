@@ -3,6 +3,8 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 
 -- Processing in-game settings. In-game settings are preferrable
 -- over global config.lua values.
+-- Warning: minetest.settings:get() and minetest.settings:get_bool() 
+-- return `nil` value when not set, instead of actual default value.
 function minetest_wadsprint.load_minetest_settings_key(key,type)
     if type == "int" then
         if minetest.settings:get("minetest_wadsprint."..key) ~= nil then
