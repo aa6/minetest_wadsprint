@@ -3,6 +3,7 @@
 -- Common config values.
 minetest_wadsprint.HIDE_HUD_BARS                               = false
 minetest_wadsprint.STAMINA_MAX_VALUE                           = 100
+minetest_wadsprint.ENABLE_INGAME_SETTINGS                      = true
 minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE                     = 3
 minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE                  = true
 minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS            = 1000

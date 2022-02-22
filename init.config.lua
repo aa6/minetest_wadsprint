@@ -4,19 +4,20 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 -- Processing in-game settings. In-game settings are preferrable
 -- over global config.lua values.
 function minetest_wadsprint.load_minetest_settings_key(key,type)
-  if type == "int" then
-    if minetest.settings:get("minetest_wadsprint."..key) ~= nil then
-      minetest_wadsprint[key] = tonumber(minetest.settings:get("minetest_wadsprint."..key))
+    if type == "int" then
+        if minetest.settings:get("minetest_wadsprint."..key) ~= nil then
+            minetest_wadsprint[key] = tonumber(minetest.settings:get("minetest_wadsprint."..key))
+        end
+    elseif type == "bool" then
+        if minetest.settings:get_bool("minetest_wadsprint."..key) ~= nil then
+            minetest_wadsprint[key] = minetest.settings:get_bool("minetest_wadsprint."..key)
+        end
     end
-  elseif type == "bool" then
-    if minetest.settings:get_bool("minetest_wadsprint."..key) ~= nil then
-      minetest_wadsprint[key] = minetest.settings:get_bool("minetest_wadsprint."..key)
-    end
-  end
+    minetest_wadsprint.log(minetest.settings:get("minetest_wadsprint."..key))
 end
 minetest_wadsprint.load_minetest_settings_key("ENABLE_INGAME_SETTINGS","bool")
 if minetest_wadsprint.ENABLE_INGAME_SETTINGS == true then
-  print("In-game minetest settings are enabled. Loading them.")
+  minetest_wadsprint.log("In-game minetest settings are enabled. Loading them.")
   minetest_wadsprint.load_minetest_settings_key("HIDE_HUD_BARS","bool")
   minetest_wadsprint.load_minetest_settings_key("STAMINA_MAX_VALUE","int")
   minetest_wadsprint.load_minetest_settings_key("DYSPNEA_THRESHOLD_VALUE","int")
@@ -29,16 +30,16 @@ if minetest_wadsprint.ENABLE_INGAME_SETTINGS == true then
   minetest_wadsprint.load_minetest_settings_key("SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS","int")
   minetest_wadsprint.load_minetest_settings_key("SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS","int")
 else
-  print("In-game minetest settings are disabled. Ignoring them.")
+  minetest_wadsprint.log("In-game minetest settings are disabled. Ignoring them.")
 end
 
 -- Processing world-specific config. World-specific values are preferrable 
 -- over both global config and in-game settings.
 if file_exists(minetest_wadsprint.worldconfig) then 
-  print("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
+  minetest_wadsprint.log("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
   dofile(minetest_wadsprint.worldconfig)
 else
-  print("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
+  minetest_wadsprint.log("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
   local new_world_config_contents = 
     "-- World-specific config. Values are taken from `mods/minetest_wadsprint/config.lua`:\n"..
     "-- Please uncomment lines of your need and set the desired value.\n"
