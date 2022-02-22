@@ -13,7 +13,6 @@ function minetest_wadsprint.load_minetest_settings_key(key,type)
             minetest_wadsprint[key] = minetest.settings:get_bool("minetest_wadsprint."..key)
         end
     end
-    minetest_wadsprint.log(minetest.settings:get("minetest_wadsprint."..key))
 end
 minetest_wadsprint.load_minetest_settings_key("ENABLE_INGAME_SETTINGS","bool")
 if minetest_wadsprint.ENABLE_INGAME_SETTINGS == true then
