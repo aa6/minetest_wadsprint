@@ -1,1 +1,1 @@
-Sprinting/running with W, A and D buttons.
+Sprinting/running with W, A and D buttons. A+D => A+D+W => W.

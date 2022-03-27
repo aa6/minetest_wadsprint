@@ -1,6 +1,6 @@
 # Wadsprint [![Version](/util/version.png)] [minetest_wadsprint] 
 
-Minetest mod for sprinting/running with W, A and D buttons.
+Minetest mod for sprinting/running with W, A and D buttons. A+D => A+D+W => W.
 
 ![Wadsprint](/screenshots/wadsprint_screenshots.png?raw=true "Wadsprint mod screenshots")
 
