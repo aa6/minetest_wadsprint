@@ -33,7 +33,7 @@ elseif minetest.get_modpath("hudbars") ~= nil then
             player.obj,                            -- `player`: `ObjectRef` of the player to which the new HUD bar should be displayed to.
             minetest_wadsprint.HUDBARS_IDENTIFIER, -- `identifier`: The identifier of the HUD bar type, as specified in `hb.register_hudbar`.
             math.ceil(player.stamina),             -- `start_value`: The initial current value of the HUD bar. This is optional, `default_start_value` of the registration function will be used, if this is `nil`.
-            nil,                                   -- `start_max`: The initial maximum value of the HUD bar. This is optional, `default_start_max` of the registration function will be used, if this is `nil`
+            minetest_wadsprint.STAMINA_MAX_VALUE,                                   -- `start_max`: The initial maximum value of the HUD bar. This is optional, `default_start_max` of the registration function will be used, if this is `nil`
             nil                                    -- `start_hidden`: Whether the HUD bar is initially hidden. This is optional, `default_start_hidden` of the registration function will be used as default.
         )
     end
