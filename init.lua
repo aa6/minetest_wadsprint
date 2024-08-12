@@ -35,7 +35,8 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.legacy.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.hudbars.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.set_sprinting_physics.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.coffee.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.coffee.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.mineclonia.lua")
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------ Mod initialization --
 ----------------------------------------------------------------------------------------------------
