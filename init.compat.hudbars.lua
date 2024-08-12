@@ -1,10 +1,19 @@
-if minetest_wadsprint.HIDE_HUD_BARS == true then
+if minetest.get_modpath("hudbars") ~= nil and minetest_wadsprint.HIDE_HUD_BARS ~= true then 
 
-    function minetest_wadsprint.initialize_hudbar(player) end
-    function minetest_wadsprint.hudbar_update_stamina(player) end
-    function minetest_wadsprint.hudbar_update_ready_to_sprint(player) end
-
-elseif minetest.get_modpath("hudbars") ~= nil then 
+    function minetest.legacy_hudbars_below_2_0_0()
+        local hudbars_readme
+        local hudbars_template
+        local hudbars_readme_path = minetest.get_modpath("hudbars").."/README.md"
+        local hudbars_template_path = minetest.get_modpath("hudbars").."/locale/template.txt"
+        if file_exists(hudbars_readme_path) and file_exists(hudbars_template_path) then
+            hudbars_readme = file_get_contents(hudbars_readme_path)
+            hudbars_template = file_get_contents(hudbars_template_path)
+            if string.find(hudbars_readme,"The current version is 1.") and string.find(hudbars_template,"%%s: %%d/%%d") then 
+                print(minetest.get_current_modname()..": Hudbars version below 2.0.0 legacy hook applied.")
+                minetest_wadsprint.HUDBARS_2_0_0_TEXT_FORMAT = minetest_wadsprint.HUDBARS_TEXT_FORMAT
+            end
+        end
+    end
 
     minetest.legacy_hudbars_below_2_0_0()
     -- @see http://repo.or.cz/minetest_hudbars.git/blob_plain/HEAD:/API.md
@@ -85,91 +94,4 @@ elseif minetest.get_modpath("hudbars") ~= nil then
             minetest_wadsprint.STAMINA_MAX_VALUE   -- `new_max_value`: The new maximum value of the HUD bar
         )
     end
-
-elseif minetest.get_modpath("hud") ~= nil then 
-
-    -- @see https://github.com/BlockMen/hud_hunger/blob/master/API.txt
-    function minetest_wadsprint.register_hudbar()
-        hud.register(
-            minetest_wadsprint.HUDHUNGER_BAR_NAME,
-            {
-                hud_elem_type = "statbar",                               -- currently only supported type (same as in lua-api.txt)
-                max = minetest_wadsprint.HUDHUNGER_HALF_ICONS_NUMBER,    -- used to prevent "overflow" of statbars
-                size = minetest_wadsprint.HUDHUNGER_ICON_SIZE,           -- statbar texture size (default 24x24), needed to be scaled correctly
-                text = minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON, -- texture name (same as in lua-api.txt)
-                offset = minetest_wadsprint.HUDHUNGER_OFFSET,
-                number = minetest_wadsprint.HUDHUNGER_HALF_ICONS_NUMBER, -- number/2 = number of full textures(e.g. hearts)
-                position = minetest_wadsprint.HUDHUNGER_POSITION,        -- position of statbar (same as in lua-api.txt)
-                alignment = minetest_wadsprint.HUDHUNGER_ALIGNMENT,      -- alignment on screen (same as in lua-api.txt)
-                background = nil,                                        -- statbar background texture name
-                autohide_bg = false,                                     -- hide statbar background textures when number = 0
-                events = {},                                             -- called on events "damage" and "breath_changed" of players
-            }
-        )
-    end
-    function minetest_wadsprint.initialize_hudbar(player)
-        minetest_wadsprint.hudbar_update_stamina(player)
-    end
-    function minetest_wadsprint.hudbar_update_ready_to_sprint(player)
-        if player.is_sprinting or player.is_ready_to_sprint then
-            hud.change_item(
-                player.obj,
-                minetest_wadsprint.HUDHUNGER_BAR_NAME,
-                {
-                    text = minetest_wadsprint.HUDHUNGER_IS_SPRINTING_ICON,
-                }
-            )
-        else
-            hud.change_item(
-                player.obj,
-                minetest_wadsprint.HUDHUNGER_BAR_NAME,
-                {
-                    text = minetest_wadsprint.HUDBARS_IS_NOT_SPRINTING_ICON,
-                }
-            )
-        end
-    end
-    function minetest_wadsprint.hudbar_update_stamina(player)
-        hud.change_item(
-            player.obj,
-            minetest_wadsprint.HUDHUNGER_BAR_NAME,
-            {
-                number = 0, -- Workaround for some obscure bug.
-            }
-        )
-        hud.change_item(
-            player.obj,
-            minetest_wadsprint.HUDHUNGER_BAR_NAME,
-            {
-                number = math.ceil((player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE) * minetest_wadsprint.HUDHUNGER_HALF_ICONS_NUMBER),
-            }
-        )
-    end
-
-else
-
-    -- @see http://dev.minetest.net/HUD
-    function minetest_wadsprint.initialize_hudbar(player)
-        player.hud = player.obj:hud_add(
-        {
-            hud_elem_type = "statbar",                                   -- HUD type. Statbar displays a horizontal bar made up of half-images. 
-            size = minetest_wadsprint.MINETESTHUD_ICON_SIZE,             -- `size`: If used will force full-image size to this value (override texture pack image size).
-            text = minetest_wadsprint.MINETESTHUD_IS_NOT_SPRINTING_ICON, -- `text`: The name of the texture that is used. 
-            number = math.ceil((player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE) * minetest_wadsprint.MINETESTHUD_HALF_ICONS_NUMBER),                                             -- `number`: The number of half-textures that are displayed. If odd, will end with a vertically center-split texture. 
-            offset = minetest_wadsprint.MINETESTHUD_OFFSET,              -- `offset`: Specifies a pixel offset from the position. Not scaled to the screen size. Note: offset WILL adapt to screen DPI as well as the user defined scaling factor!
-            position = minetest_wadsprint.MINETESTHUD_POSITION,          -- `position`: Used for all element types. To account for differing resolutions, the position coordinates are the percentage of the screen, ranging in value from 0 to 1. 0 means left/top, 1 means right/bottom. 
-            alignment = minetest_wadsprint.MINETESTHUD_ALIGNMENT,        -- `alignment`: Specifies how the item will be aligned. It ranges from -1 to 1, with 0 being the center, -1 is moved to the left/up, and 1 is to the right/down. Fractional values can be used.
-        })
-    end
-    function minetest_wadsprint.hudbar_update_stamina(player)
-        player.obj:hud_change(player.hud, "number", math.ceil((player.stamina / minetest_wadsprint.STAMINA_MAX_VALUE) * minetest_wadsprint.MINETESTHUD_HALF_ICONS_NUMBER))
-    end
-    function minetest_wadsprint.hudbar_update_ready_to_sprint(player)
-        if player.is_sprinting or player.is_ready_to_sprint then
-          player.obj:hud_change(player.hud, "text", minetest_wadsprint.MINETESTHUD_IS_SPRINTING_ICON)
-        else
-          player.obj:hud_change(player.hud, "text", minetest_wadsprint.MINETESTHUD_IS_NOT_SPRINTING_ICON)
-        end
-    end
-    
 end

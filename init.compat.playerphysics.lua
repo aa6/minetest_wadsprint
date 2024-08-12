@@ -1,6 +1,5 @@
-local game_id = Settings(minetest.get_worldpath()..DIR_DELIM..'world.mt'):get('gameid')
+if minetest.get_modpath("playerphysics") ~= nil then 
 
-if game_id == "mineclonia" then
     function minetest_wadsprint.set_sprinting_physics(player,is_on_val)
         if player.is_sprinting_physics_on ~= is_on_val then
             if is_on_val == true then
@@ -23,4 +22,5 @@ if game_id == "mineclonia" then
             player.is_sprinting_physics_on = is_on_val
         end
     end
+    
 end

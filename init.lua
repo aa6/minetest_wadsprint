@@ -29,14 +29,17 @@ minetest_wadsprint =
     worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.api.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.log.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.core.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.legacy.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.config.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.hudbars.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.set_sprinting_physics.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.coffee.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.mineclonia.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.log.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.core.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.config.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.hudbars.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.physics.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.hud.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.hudbars.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.farming.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.playerphysics.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.player_monoids.lua")
+
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------ Mod initialization --
 ----------------------------------------------------------------------------------------------------
