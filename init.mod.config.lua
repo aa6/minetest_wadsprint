@@ -6,7 +6,7 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/config.lua")
 -- Warning: minetest.settings:get() and minetest.settings:get_bool() 
 -- return `nil` value when not set, instead of actual default value.
 function minetest_wadsprint.load_minetest_settings_key(key,type)
-    if type == "int" then
+    if type == "int" or type == "float" then
         if minetest.settings:get("minetest_wadsprint."..key) ~= nil then
             minetest_wadsprint[key] = tonumber(minetest.settings:get("minetest_wadsprint."..key))
         end
@@ -18,52 +18,49 @@ function minetest_wadsprint.load_minetest_settings_key(key,type)
 end
 minetest_wadsprint.load_minetest_settings_key("ENABLE_INGAME_SETTINGS","bool")
 if minetest_wadsprint.ENABLE_INGAME_SETTINGS == true then
-  minetest_wadsprint.log("In-game minetest settings are enabled. Loading them.")
-  minetest_wadsprint.load_minetest_settings_key("HIDE_HUD_BARS","bool")
-  minetest_wadsprint.load_minetest_settings_key("STAMINA_MAX_VALUE","int")
-  minetest_wadsprint.load_minetest_settings_key("DYSPNEA_THRESHOLD_VALUE","int")
-  minetest_wadsprint.load_minetest_settings_key("SAVE_PLAYERS_STATS_TO_FILE","bool")
-  minetest_wadsprint.load_minetest_settings_key("PLAYERS_STATS_FILE_LIMIT_RECORDS","int")
-  minetest_wadsprint.load_minetest_settings_key("PLAYER_STATS_UPDATE_PERIOD_SECONDS","int")
-  minetest_wadsprint.load_minetest_settings_key("PLAYER_CONTROLS_CHECK_PERIOD_SECONDS","int")
-  minetest_wadsprint.load_minetest_settings_key("SPRINT_RUN_SPEED_BOOST_PERCENTS","int")
-  minetest_wadsprint.load_minetest_settings_key("SPRINT_JUMP_HEIGHT_BOOST_PERCENTS","int")
-  minetest_wadsprint.load_minetest_settings_key("SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS","int")
-  minetest_wadsprint.load_minetest_settings_key("SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS","int")
+    minetest_wadsprint.log("In-game minetest settings are enabled. Loading them.")
+    local settings = minetest_wadsprint.parse_settingtypes(
+        file_get_contents(
+            minetest.get_modpath(minetest.get_current_modname()).."/settingtypes.txt"
+        )
+    )
+    for setting_name, setting in pairs(settings) do
+        minetest_wadsprint.load_minetest_settings_key(setting.name,setting.type)
+    end
 else
-  minetest_wadsprint.log("In-game minetest settings are disabled. Ignoring them.")
+    minetest_wadsprint.log("In-game minetest settings are disabled. Ignoring them.")
 end
 
 -- Processing world-specific config. World-specific values are preferrable 
 -- over both global config and in-game settings.
 if file_exists(minetest_wadsprint.worldconfig) then 
-  minetest_wadsprint.log("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
-  dofile(minetest_wadsprint.worldconfig)
+    minetest_wadsprint.log("Loading minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
+    dofile(minetest_wadsprint.worldconfig)
 else
-  minetest_wadsprint.log("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
-  local new_world_config_contents = 
-    "-- World-specific config. Values are taken from `mods/minetest_wadsprint/config.lua`:\n"..
-    "-- Please uncomment lines of your need and set the desired value.\n"
-  for line in string.gmatch(file_get_contents(minetest.get_modpath(minetest.get_current_modname()).."/config.lua"), "[^\r\n]+") do
-    if string.sub(line,0,19) == "minetest_wadsprint." then
-      new_world_config_contents = new_world_config_contents.."-- "..line.."\n"
+    minetest_wadsprint.log("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
+    local new_world_config_contents = 
+        "-- World-specific config. Values are taken from `mods/minetest_wadsprint/config.lua`:\n"..
+        "-- Please uncomment lines of your need and set the desired value.\n"
+    for line in string.gmatch(file_get_contents(minetest.get_modpath(minetest.get_current_modname()).."/config.lua"), "[^\r\n]+") do
+        if string.sub(line,0,19) == "minetest_wadsprint." then
+            new_world_config_contents = new_world_config_contents.."-- "..line.."\n"
+        end
     end
-  end
-  file_put_contents(minetest_wadsprint.worldconfig,new_world_config_contents)
+    file_put_contents(minetest_wadsprint.worldconfig,new_world_config_contents)
 end
 
 -- Processing some config values to avoid further unnecessary calculations.
 minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_COEFFICIENT = (
-  minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_PERCENTS / 100
+    minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_PERCENTS / 100
 )
 minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT = (
-  minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_PERCENTS / 100
+    minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_PERCENTS / 100
 )
 minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_UPDATE_PERIOD_COEFFICIENT = (
-  minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
-  ( minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS / 100 )
+    minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
+    ( minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS / 100 )
 )
 minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_UPDATE_PERIOD_COEFFICIENT = (
-  minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
-  ( minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS / 100 )
+    minetest_wadsprint.PLAYER_STATS_UPDATE_PERIOD_SECONDS * 
+    ( minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS / 100 )
 )
