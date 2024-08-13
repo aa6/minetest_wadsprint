@@ -26,8 +26,8 @@ if minetest_wadsprint.ENABLE_INGAME_SETTINGS == true then
   minetest_wadsprint.load_minetest_settings_key("PLAYERS_STATS_FILE_LIMIT_RECORDS","int")
   minetest_wadsprint.load_minetest_settings_key("PLAYER_STATS_UPDATE_PERIOD_SECONDS","int")
   minetest_wadsprint.load_minetest_settings_key("PLAYER_CONTROLS_CHECK_PERIOD_SECONDS","int")
-  minetest_wadsprint.load_minetest_settings_key("SPRINT_RUN_SPEED_BOOST_COEFFICIENT","int")
-  minetest_wadsprint.load_minetest_settings_key("SPRINT_JUMP_HEIGHT_BOOST_COEFFICIENT","int")
+  minetest_wadsprint.load_minetest_settings_key("SPRINT_RUN_SPEED_BOOST_PERCENTS","int")
+  minetest_wadsprint.load_minetest_settings_key("SPRINT_JUMP_HEIGHT_BOOST_PERCENTS","int")
   minetest_wadsprint.load_minetest_settings_key("SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS","int")
   minetest_wadsprint.load_minetest_settings_key("SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS","int")
 else
