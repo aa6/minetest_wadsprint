@@ -31,8 +31,9 @@ All mod dependencies are optional.
 
 - [hud?](https://github.com/BlockMen/hud_hunger)
 - [hudbars?](http://repo.or.cz/minetest_hudbars.git)
-- [player_monoids?](https://github.com/minetest-mods/player_monoids)
 - [farming?](https://notabug.org/tenplus1/farming)
+- [playerphysics?](https://content.minetest.net/packages/TestificateMods/playerphysics/)
+- [player_monoids?](https://github.com/minetest-mods/player_monoids)
 
 **Dependents**
 
