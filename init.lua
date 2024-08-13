@@ -31,10 +31,10 @@ minetest_wadsprint =
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.api.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.log.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.core.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.parse_settingtypes.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.config.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.hudbars.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.physics.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.parse_settingtypes.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.hud.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.hudbars.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.farming.lua")
@@ -44,6 +44,9 @@ dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.playe
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------ Mod initialization --
 ----------------------------------------------------------------------------------------------------
+minetest_wadsprint.log("Version: "..minetest_wadsprint.version)
+minetest_wadsprint.load_config()
+minetest_wadsprint.load_hudbars()
 minetest.register_on_joinplayer(minetest_wadsprint.initialize_player)
 minetest.register_on_respawnplayer(minetest_wadsprint.reset_player_stats)
 minetest.register_on_leaveplayer(minetest_wadsprint.deinitialize_player)
