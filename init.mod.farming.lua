@@ -1,4 +1,7 @@
 if minetest.registered_nodes["farming:coffee_cup"] then
+
+	minetest_wadsprint.log("Mod found: `farming`. Applying compatibility code.")
+	
     minetest.override_item("farming:coffee_cup", {
         on_use = function(itemstack, user, pointed_thing)
             if user == nil then return end -- better save then sorry
@@ -11,4 +14,5 @@ if minetest.registered_nodes["farming:coffee_cup"] then
             return itemstack
         end
     })
+    
 end

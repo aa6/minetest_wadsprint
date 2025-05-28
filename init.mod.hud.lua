@@ -1,5 +1,7 @@
 if minetest.get_modpath("hud") ~= nil and minetest_wadsprint.HIDE_HUD_BARS ~= true then 
 
+	minetest_wadsprint.log("Mod found: `hud`. Applying compatibility code.")
+
     -- @see https://github.com/BlockMen/hud_hunger/blob/master/API.txt
     function minetest_wadsprint.register_hudbar()
         hud.register(

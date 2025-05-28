@@ -1,5 +1,7 @@
 if minetest.get_modpath("playerphysics") ~= nil then 
 
+	minetest_wadsprint.log("Mod found: `playerphysics`. Applying compatibility code.")
+
     function minetest_wadsprint.set_sprinting_physics(player,is_on_val)
         if player.is_sprinting_physics_on ~= is_on_val then
             if is_on_val == true then

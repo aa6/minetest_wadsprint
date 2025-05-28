@@ -28,25 +28,21 @@ minetest_wadsprint =
     savepath = minetest.get_worldpath().."/mod_minetest_wadsprint_saved_players_stats.dat",
     worldconfig = minetest.get_worldpath().."/mod_minetest_wadsprint_config.lua",
 }
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.api.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.log.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.core.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.config.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.hudbars.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.physics.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.mod.parse_settingtypes.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.hud.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.hudbars.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.farming.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.playerphysics.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.compat.player_monoids.lua")
-
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.log.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.api.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.core.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.config.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.hudbars.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.physics.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.parse_settingtypes.lua")
+dofile(minetest.get_modpath(minetest.get_current_modname()).."/init.self.mods_compatibility.lua")
 ----------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------ Mod initialization --
 ----------------------------------------------------------------------------------------------------
 minetest_wadsprint.log("Version: "..minetest_wadsprint.version)
 minetest_wadsprint.load_config()
 minetest_wadsprint.load_hudbars()
+minetest_wadsprint.load_mods_compatibility()
 minetest.register_on_joinplayer(minetest_wadsprint.initialize_player)
 minetest.register_on_respawnplayer(minetest_wadsprint.reset_player_stats)
 minetest.register_on_leaveplayer(minetest_wadsprint.deinitialize_player)
