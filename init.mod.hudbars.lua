@@ -1,7 +1,7 @@
 if minetest.get_modpath("hudbars") ~= nil and minetest_wadsprint.HIDE_HUD_BARS ~= true then 
 
-	minetest_wadsprint.log("Mod found: `hudbars`. Applying compatibility code.")
-	
+    minetest_wadsprint.log("Mod found: `hudbars`. Applying compatibility code.")
+
     function minetest.legacy_hudbars_below_2_0_0()
         local hudbars_readme
         local hudbars_template

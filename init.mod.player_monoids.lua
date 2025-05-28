@@ -1,6 +1,6 @@
 if minetest.get_modpath("player_monoids") ~= nil then 
 
-	minetest_wadsprint.log("Mod found: `player_monoids`. Applying compatibility code.")
+    minetest_wadsprint.log("Mod found: `player_monoids`. Applying compatibility code.")
 
     local default_minetest_wadsprint_initialize_player = minetest_wadsprint.initialize_player
     function minetest_wadsprint.initialize_player(player_obj)
