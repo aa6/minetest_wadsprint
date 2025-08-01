@@ -46,6 +46,8 @@ All mod dependencies are optional.
 - Use `print(dump( ... ))` to print tables to console when debugging.
 - Use `error(123)` to stop execution when debugging.
 - Remember that array numeration in Lua starts not from `0` but from `1`: `arr = { 123 }; -- arr[0] == nil; arr[1] == 123`.
+- `ipairs`: Iterates over tables with integer keys, starting from 1 and stopping at the first `nil` value.
+- `pairs`: Iterates over all key-value pairs in a table, regardless of the key type.
 - Use manual http://dev.minetest.net/Category:Methods
 
 **Changelog**
