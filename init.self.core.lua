@@ -184,18 +184,19 @@ function minetest_wadsprint.save_players_stats()
       counter = counter + 1
     end
     for key, val in pairs(minetest_wadsprint.offline_stats) do
-      if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS then break end
-      if minetest_wadsprint.stats[val.name] == nil and val.was_online ~= nil then
-          stats[counter] = { name = val.name, stamina = val.stamina }
-          counter = counter + 1
-      end
+        if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS then break end
+        if minetest_wadsprint.stats[key] == nil and val.was_online ~= nil then
+            stats[counter] = { name = key, stamina = val.stamina }
+            counter = counter + 1
+        end
     end
+
     for key, val in pairs(minetest_wadsprint.offline_stats) do
-      if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS then break end
-      if minetest_wadsprint.stats[val.name] == nil and val.was_online == nil then
-          stats[counter] = { name = val.name, stamina = val.stamina }
-          counter = counter + 1
-      end
+        if counter == minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS then break end
+        if minetest_wadsprint.stats[key] == nil and val.was_online == nil then
+            stats[counter] = { name = key, stamina = val.stamina }
+            counter = counter + 1
+        end
     end
     table.save(stats,minetest_wadsprint.savepath)
 end
