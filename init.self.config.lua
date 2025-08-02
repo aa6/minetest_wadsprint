@@ -41,7 +41,9 @@ function minetest_wadsprint.load_config()
         minetest_wadsprint.log("Creating minetest_wadsprint world-specific config: "..minetest_wadsprint.worldconfig)
         local new_world_config_contents = 
             "-- World-specific config. Values are taken from `mods/minetest_wadsprint/config.lua`:\n"..
-            "-- Please uncomment lines of your need and set the desired value.\n"
+            "-- This file allows you to set config values specific to this particular world\n"..
+            "-- that are different from global mod config values.\n"..
+            "-- Uncomment lines of your need and set the desired value.\n"
         for line in string.gmatch(file_get_contents(minetest.get_modpath(minetest.get_current_modname()).."/config.lua"), "[^\r\n]+") do
             if string.sub(line,0,19) == "minetest_wadsprint." then
                 new_world_config_contents = new_world_config_contents.."-- "..line.."\n"
