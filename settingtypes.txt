@@ -1,4 +1,14 @@
-# If this options is disabled, no other settings option will have effect over default global config values. In contrary, world-specific config values will be still preferred over this in-game settings.
+# There are three possible ways to set a config value:
+#
+# 1. global config.lua file
+# 2. in-game mod settings menu (you are probably here)
+# 3. world-specific config.lua file. 
+#
+# Priority: world-specific (3) > in-game settings (2) > global (1).
+#
+# If this options is disabled, only global config.lua and world-specific config.lua will define the options values. 
+# This option could be useful to temporarily apply custom in-game config values and then disable them
+# without resetting each one through the interface.
 minetest_wadsprint.ENABLE_INGAME_SETTINGS (ENABLE ALL THE MOD SETTINGS BELOW) bool true
 
 # If enabled, stamina HUD bar will not be shown.
@@ -13,7 +23,8 @@ minetest_wadsprint.DYSPNEA_THRESHOLD_VALUE (Dyspnea threshold value in points) i
 # Saves stats to a special file in a world directory. If disabled, players will be able to reset their stamina to maximum by leaving and immediately joining a game.
 minetest_wadsprint.SAVE_PLAYERS_STATS_TO_FILE (Save players stats to file on disconnect) bool true
 
-# Stats file limit to prevent HDD overflow or large file reading lag when player joins.
+# Sets the maximum number of player stats records saved to prevent HDD overflow or lag when players join.
+# If set to 1000, the oldest record is deleted when the 1001st player joins.
 minetest_wadsprint.PLAYERS_STATS_FILE_LIMIT_RECORDS (Stats save file records max limit) int 1000
 
 # In-game cycle interval of players' stamina recalculation.
