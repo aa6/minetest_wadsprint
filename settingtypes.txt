@@ -40,7 +40,7 @@ minetest_wadsprint.SPRINT_RUN_SPEED_BOOST_PERCENTS (Sprint run speed boost perce
 minetest_wadsprint.SPRINT_JUMP_HEIGHT_BOOST_PERCENTS (Sprint jump height boost percent %) float 120
 
 # Calculated in percents % off STAMINA_MAX_VALUE.
-minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS (Stamina decrease percent % per second when running) float 0.05
+minetest_wadsprint.SPRINT_STAMINA_DECREASE_PER_SECOND_PERCENTS (Stamina decrease percent % per second when running) float 0.5
 
 # Calculated in percents % off STAMINA_MAX_VALUE.
-minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS (Stamina increase percent % per second when not running) float 0.01
+minetest_wadsprint.SPRINT_STAMINA_INCREASE_PER_SECOND_PERCENTS (Stamina increase percent % per second when not running) float 0.1
